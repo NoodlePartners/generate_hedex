@@ -43026,6 +43026,7 @@ class Addresses(object):
         z = self.zips[Rand.get(self.n_zips)]
         city = z[4]
         state = z[5]
+        county = z[6]
         postal_code = z[1]
         country = "US"
         return {"building_number": building_number,
@@ -43034,6 +43035,7 @@ class Addresses(object):
                 "city": city,
                 "state": state,
                 "postal_code": postal_code,
+                "county": county,
                 "country": country}
 
 
