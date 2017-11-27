@@ -540,18 +540,21 @@ class Names(object):
     n_high_school_names = high_school_names.__len__()
 
 
-
     _percent_changed_name = 65
     _percent_preferring_different = 5
+    _percent_suffix_jr = 5
+
     @classmethod
     def get_name(self):
         # 50% male
         if Rand.get(100) < 50:
             gender = "M"
             ng = 0
+            prefix = "Mr."
         else:
             gender = "F"
             ng = 1
+            prefix = "Ms."
         given_name = self.given_names[Rand.get(self.n_given_names)][ng]
         family_name = self.family_names[Rand.get(self.n_family_names)]
         marital_status = Rand.pick([
@@ -559,21 +562,29 @@ class Names(object):
             ["M", 20],
             ["D", 10]
         ])
-        birth_name = "" # Or do we want the family_name?
-        if gender == "F" and marital_status != "S" and Rand.get(100) < self._percent_changed_name:
-            birth_name = self.family_names[Rand.get(self.n_family_names)]
+        birth_family_name = "" # Or do we want the family_name?
+        suffix = ""
+        if gender == "F":
+            if marital_status != "S" and Rand.get(100) < self._percent_changed_name:
+                birth_family_name = self.family_names[Rand.get(self.n_family_names)]
+        else:
+            if Rand.get(100) < self._percent_suffix_jr:
+                suffix = "Jr."
         if Rand.get(100) < self._percent_preferring_different:
-            preferred_name = self.given_names[Rand.get(self.n_given_names)][ng]
+            preferred_given_name = self.given_names[Rand.get(self.n_given_names)][ng]
         else:
             # Do we want blank or the actual name?
-            preferred_name = ""
+            preferred_given_name = ""
         return {
+            "prefix": prefix,
             "given_name": given_name,
             "family_name": family_name,
+            "suffix": suffix,
             "gender": gender,
             "marital_status": marital_status,
-            "birth_name": birth_name,
-            "preferred_name": preferred_name
+            "birth_given_name": given_name, # don't yet support a different birth given name
+            "birth_family_name": birth_family_name,
+            "preferred_given_name": preferred_given_name
         }
 
 

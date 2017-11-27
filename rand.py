@@ -28,3 +28,8 @@ class Rand(object):
         r = Rand.get(2*n_days + 1) - n_days
         picked = middle + datetime.timedelta(days = r)
         return picked.strftime("%Y-%m-%d")
+
+
+    @classmethod
+    def get_bool(self, percent):
+        return self.pick(((False, 100-percent),(True, percent)))

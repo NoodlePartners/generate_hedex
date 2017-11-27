@@ -43038,8 +43038,19 @@ class Addresses(object):
                 "county": county,
                 "country": country}
 
+    # Phone numbers and area codes don't start with N11
+    @classmethod
+    def _get_us_3(self):
+        k = 11
+        while k == 11:
+            x = Rand.get(800)+200
+            k = x % 11
+        return x
 
     @classmethod
-    def get_phone(self):
-        return str(Rand.get(800)+200) + "-" + \
-            str(Rand.get(800)+200) + "-" + ("%04d" % Rand.get(10000))
+    def get_phone(self, prefix=False):
+        if prefix:
+            ccode = "+1 "
+        else:
+            ccode = ""
+        return ccode+("%3d"%self._get_us_3())+"-"+("%3d"%self._get_us_3())+"-"+("%04d"%Rand.get(10000))
