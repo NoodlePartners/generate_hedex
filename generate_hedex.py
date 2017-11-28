@@ -4,6 +4,7 @@ from emails import Emails
 from rand import Rand
 import sys
 import json
+import datetime
 
 def p(x):
     sys.stdout.write(x)
@@ -379,7 +380,7 @@ def generate_hedex(n):
     # HEDEX GET response, from Swagger Documents
     res = {
         "tenantId": "1234567",
-        "batchId": "string",
+        "batchId": "123",
         # "batchGroupId": "string",
         # "batchTransactionStatus": "SUCCESS",
         # "batchTransactionStatusMessage": "string",
@@ -399,7 +400,7 @@ def generate_hedex(n):
 
 
 
-_birthday_start_date = "1992-10-10"
+_birthday_start_date = "1990-10-10"
 _birthday_n_days = 5 * 365
 
 def generate_admissions_person():
@@ -519,6 +520,7 @@ def generate_person_address():
     res["postalCode"] = address_x["postal_code"]
     return res
 
+
 _percent_with_secondary_address = 20
 
 def generate_person_addresses():
@@ -605,7 +607,7 @@ def generate_person_relation():
             }
         ]
     }
-    return None # TODO
+    return {} # TODO
 
 
 def generate_person_relations():
@@ -654,44 +656,162 @@ def generate_person_education():
         ]
     }
         
-    return None
+    return {} #TODO
 
 
 def generate_person_educations():
     return [] #TODO
 
 
-def generate_person_test_score():
+def generate_person_test_scores():
+    tests = ((50,(("SATM",100,800),("SATV",100,800))),
+             (45,(("ACTE",1,36),("ACTM",1,36),("ACTR",1,36),("ACTS",1,36))),
+             (15,(("GREV",130,170),("GREQ",130,170),("GREW",0,6))))
+    res = []
+    for test in tests:
+        if Rand.get_bool(test[0]):
+            for sect in test[1]:
+                score = Rand.get(sect[2]-sect[1]+1) + sect[1]
+                res.append(
+                    {
+                        "testName": sect[0],
+                        "testDate": Rand.get_date_in_range('2016-01-01',365),
+                        "testScore": score,
+                        "testStatus": "official",
+                        "testSource": "transcript"
+                    }
+                )
+    return res
+
+
+def generate_prospect_program_interest():
     res = {
-        "testName": "string",
-        "testDate": "string",
-        "testScore": "string",
-        "testStatus": "string",
-        "testSource": "string"
+        "prospectAcademicLevel": "Masters",
+        "prospectAcademicProgram": "MSW",
+        "prospectMajor": "",
+        "prospectFinancialAidIntent": False,
+        "prospectFull-Time/PartTimeIntent": "Part Time",
+        "prospectInterestedProgramStatus": "",
+        "prospectStartTerm": "Spring 2018",
+        "prospectStartDate": "",
+        "prospectStudentType": "",
+        "residentOrCommuterIntent": False
     }
-    return None # TODO
+
+
+def generate_prospect_program_interests():
+    return [generate_prospect_program_interest()]
+
+
+def generate_prospect_source():
+    res = {
+        "sourceCode": "",
+        "sourceDateTime": "",
+        "sourceDetail": "",
+        "sourceMedium": "",
+        "sourceClickId": Rand.get(100000000)
+    }
+    return res #TODO
+
+
+def generate_prospect_sources():
+    return [] #TODO
+
+
+def generate_activity_ids():
+    res = [{
+        "activityId": "%d"%(Rand.get(1000000)+1000000),
+        "activityIdType": "FPS"
+    }]
+
+
+def generate_prospect_activity(program, term, vendor, coachId, channel, initiator, startDatetime, status, disposition, notes, resultingStatus):
+    res = {
+        "activityProgramOfInterest": program,
+        "activityProgramStartTerm": term,
+        "activityProgramStartDate": "",
+        "activityCoachingVendor": vendor,
+        "activityCoachID": coachId,
+        "activityIDs": [],
+        "activityChannel": channel,
+        "activityInitiator": initiator,
+        "activityStartDatetime": startDatetime,
+        "activityStatus": status,
+        "activityDisposition": disposition,
+        "notes": notes,
+        "resultingProspectStatus": resultingStatus,
+        "optOutFields": ""
+    }
+    res["activityIDs"] = generate_activity_ids()
+    return res
         
 
-def generate_person_test_scores():
-    return [] # TODO
+def generate_prospect_activities():
+    program = "MSW"
+    term = Rand.pick((("Spring 2018",70),("Summer 2018",10),("Fall 2018",20)))
+    vendor = "FPS"
+    coachId = "C" + ("%03d"%Rand.get(1000))
+    channel = Rand.pick((("phone",75),("email",15),("text",10)))
+    initiator = "coach"
+    status = "complete"
+    startDatetime_dt = datetime.datetime.strptime("2017-02-10T09:38", "%Y-%m-%dT%H:%M")
+    res = []
+    n = Rand.get(11)
+    i = 0
+    while(i<n):
+        activityStartDatetime = startDatetime_dt.strftime("%Y-%m-%d")
+        if i == n-1:
+            disposition = "closed"
+            resultingStatus = "closed"
+        else:
+            disposition = "open"
+            resultingStatus = "open"
+        notes = "Spoke on " + activityStartDatetime
+        startDatetime = startDatetime_dt.strftime("%Y-%m-%dT%H:%M-04:00")
+        res.append(generate_prospect_activity(program, term, vendor, coachId, channel, initiator,
+                                              startDatetime, status, disposition, notes, resultingStatus))
+        startDatetime_dt += datetime.timedelta(1, 3600) # 25 hours later
+        i+=1
+    return res
+
+
+def generate_prospect_event():
+    res = {
+        "eventAttended": "Jazz Party",
+        "eventDetails": "Held at the Erin Rose Bar",
+        "eventAttendedDate": "2017-06-15"
+    }
+    return res
+
+
+_percent_attended_party = 10
+
+def generate_prospect_events():
+    res = []
+    if Rand.get_bool(_percent_attended_party):
+        res.append(generate_prospect_event())
+    return []
+
+
+def generate_prospect_rating():
+    res = {
+        "ratingProgramOfInterest": "MSW",
+        "ratingStartTerm": "Sprint 2018",
+        "ratingStartDate": "",
+        "ratingType": "demographic score",
+        "ratingScore": Rand.get(4)
+    }        
+    return {}
+
+
+def generate_prospect_ratings():
+    res = [generate_prospect_rating()]
+    return res
 
 
 def generate_person_prospect():
     res = {
-        "ProspectProgramInterests": [
-            {
-                "prospectAcademicLevel": "string",
-                "prospectAcademicProgram": "string",
-                "prospectMajor": "string",
-                "prospectFinancialAidIntent": True,
-                "prospectFull-Time/PartTimeIntent": "string",
-                "prospectInterestedProgramStatus": "string",
-                "prospectStartTerm": "string",
-                "prospectStartDate": "string",
-                "prospectStudentType": "string",
-                "residentOrCommuterIntent": True
-            }
-        ],
+        "ProspectProgramInterests": [],
         "highlyDesirable": "string",
         "prospectComments": "string",
         "prospectAdmissionsCounselor": "string",
@@ -714,56 +834,15 @@ def generate_person_prospect():
         "totalAttemptsToContactAfterCommunicate": 0,
         "leadQuality": 0,
         "nextCommunicationObjective": "string",
-        "ProspectSources": [
-            {
-                "sourceCode": "string",
-                "sourceDateTime": "2017-11-22T17:06:02.617Z",
-                "sourceDetail": "string",
-                "sourceMedium": "string",
-                "sourceClickId": "string"
-            }
-        ],
-        "ProspectActivity": [
-            {
-                "activityProgramOfInterest": "string",
-                "activityProgramStartTerm": "string",
-                "activityProgramStartDate": "string",
-                "activityCoachingVendor": "string",
-                "activityCoachID": "string",
-                "activityIDs": [
-                    {
-                        "activityId": "string",
-                        "activityIdType": "string"
-                    }
-                ],
-                "activityChannel": "string",
-                "activityInitiator": "string",
-                "activityStartDatetime": "2017-11-22T17:06:02.617Z",
-                "activityStatus": "active",
-                "activityDisposition": "TBD",
-                "notes": "string",
-                "resultingProspectStatus": "string",
-                "optOutFields": "string"
-            }
-        ],
-        "ProspectEvents": [
-            {
-                "eventAttended": "string",
-                "eventDetails": "string",
-                "eventAttendedDate": "string"
-            }
-        ],
-        "ProspectRatings": [
-            {
-                "ratingProgramOfInterest": "string",
-                "ratingStartTerm": "string",
-                "ratingStartDate": "string",
-                "ratingType": "string",
-                "ratingScore": 0
-            }
-        ]
+        "ProspectSources": [],
+        "ProspectActivity": [],
+        "ProspectEvents": [],
+        "ProspectRatings": []
     }
-    return res #TODO
+    res["ProspectSources"] = generate_prospect_sources()
+    res["ProspectActivity"] = generate_prospect_activities()
+    res["ProspectEvents"] = generate_prospect_events()
+    return res
 
 
 def generate_person_applicant():
@@ -790,6 +869,51 @@ def generate_person_applicant():
 
 
 def generate_person_applications():
+    return [] #TODO
+
+
+def generate_application_check_list_item():
+    res = {
+        "checklistItemCode": "string",
+        "checklistItemStatus": "string",
+        "checklistItemDate": "string",
+        "checklistItemAssignedDate": "string",
+        "checklistItemInstance": "string",
+        "checklistItemComment": "string",
+        "checklistItemFaYear": 0
+    }        
+    return {} #TODO
+
+
+def generate_application_check_list_items():
+    return [] #TODO
+
+
+def generate_application_check_list_item():
+    res = {
+        "checklistItemCode": "string",
+        "checklistItemStatus": "string",
+        "checklistItemDate": "string",
+        "checklistItemAssignedDate": "string",
+        "checklistItemInstance": "string",
+        "checklistItemComment": "string",
+        "checklistItemFaYear": 0
+    }
+    return res
+
+
+def generate_application_financial_aid():
+    res = {
+        "financialAidStatus": "string",
+        "financialAidType": "string",
+        "financialAidAwardAmount": "Unknown Type: double",
+        "financialAidAwardYear": "string",
+        "fafsaFiled": True
+    }
+    return res
+        
+
+def generate_application_financial_aids():
     return [] #TODO
 
 
@@ -825,25 +949,9 @@ def generate_person_application():
         "fullTimePartTimeIntent": "string",
         "applicationFeeReceiptIndicator": True,
         "applicationFeeReceiptDate": "string",
-        "ApplicationCheckListItems": [
-            {
-                "checklistItemCode": "string",
-                "checklistItemStatus": "string",
-                "checklistItemDate": "string",
-                "checklistItemAssignedDate": "string",
-                "checklistItemInstance": "string",
-                "checklistItemComment": "string",
-                "checklistItemFaYear": 0
-            }
-        ],
-        "ApplicationFinancialAid": [
-            {
-                "financialAidStatus": "string",
-                "financialAidType": "string",
-                "financialAidAwardAmount": "Unknown Type: double",
-                "financialAidAwardYear": "string",
-                "fafsaFiled": True
-            }
-        ]
+        "ApplicationCheckListItems": [],
+        "ApplicationFinancialAid": []
     }
+    res["ApplicationCheckListItems"] = generate_application_check_list_items()
+    res["ApplicationFinancialAid"] = generate_application_financial_aids()
     return res #TODO
