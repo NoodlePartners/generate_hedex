@@ -422,12 +422,12 @@ def generate_admissions_person():
         "formerLastName": "",
         "placeOfBirth": "",
         "maritalStatus": "",
-        "religiousPreference": "string",
-        "veteranStatus": "string",
+        "religiousPreference": "",
+        "veteranStatus": "",
         "ipedsHispanicLatino": True,
-        "ethnicity": "string",
-        "listOfRaces": "string",
-        "languagesSpoken": "string",
+        "ethnicity": "",
+        "listOfRaces": "",
+        "languagesSpoken": "",
         "primaryLanguage": "string",
         "alienStatus": "string",
         "countryOfCitizenship": "string",
@@ -441,255 +441,12 @@ def generate_admissions_person():
         "PersonAddresses": [],
         "PersonPhones": [],
         "PersonEmails": [],
-        "PersonRelations": {
-            "typeOfRelationship": "string",
-            "relationGender": "string",
-            "relationPrefix": "string",
-            "relationSuffix": "string",
-            "relationFirstName": "string",
-            "relationLastName": "string",
-            "relationDeceased": True,
-            "relationSourceCode": "string",
-            "RelationAddresses": [
-                {
-                    "relationAddressType": "string",
-                    "relationAddressLine1": "string",
-                    "relationAddressLine2": "string",
-                    "relationAddressLine3": "string",
-                    "relationAddressCity": "string",
-                    "relationAddressState": "string",
-                    "relationAddressPostalCode": "string",
-                    "relationAddressCountry": "string"
-                }
-            ],
-            "RelationPhones": [
-                {
-                    "relationPhoneNumber": "string",
-                    "relationPhoneType": "string",
-                    "relationPhoneExtension": 0
-                }
-            ],
-            "RelationEmails": [
-                {
-                    "relationEmailAddress": "string",
-                    "relationEmailAddressType": "string"
-                }
-            ]
-        },
-        "PersonEducation": [
-            {
-                "institutionAttendedCeebCode": "string",
-                "institutionAttendedFiceCode": "string",
-                "institutionAttendedName": "string",
-                "institutionAttendedAddressLine1": "string",
-                "institutionAttendedAddressLine2": "string",
-                "institutionAttendedAddressLine3": "string",
-                "institutionAttendedCity": "string",
-                "institutionAttendedState": "string",
-                "institutionAttendedPostalCode": "string",
-                "institutionAttendedCountry": "string",
-                "institutionAttendedType": "string",
-                "institutionAttendedStartDate": "string",
-                "institutionAttendedEndDate": "string",
-                "institutionAttendedStartYears": 0,
-                "institutionAttendedEndYears": 0,
-                "institutionAttendedTranscriptDate": "string",
-                "institutionAttendedTranscriptType": "string",
-                "institutionAttendedTranscriptStatus": "string",
-                "institutionAttendedCreditsEarned": "Unknown Type: float",
-                "institutionAttendedGpa": "Unknown Type: float",
-                "institutionAttendedClassRankPercentage": "Unknown Type: float",
-                "institutionAttendedClassRankNumerator": 0,
-                "institutionAttendedClassRankDenominator": 0,
-                "institutionAttendedGraduationType": "string",
-                "institutionAttendedTypeOfEducation": "string",
-                "institutionAttendedDiplomaReceived": True,
-                "EducationCredentials": [
-                    {
-                        "credentialInstitutionId": "string",
-                        "institutionAttendedDegreeObtained": "string",
-                        "institutionAttendedDegreeDate": "string",
-                        "institutionAttendedCcdsObtained": "string",
-                        "institutionAttendedCcdDates": "string",
-                        "institutionAttendedMajor": "string",
-                        "institutionAttendedMinor": "string",
-                        "institutionAttendedSpecialization": "string"
-                    }
-                ]
-            }
-        ],
-        "PersonTestScores": [
-            {
-                "testName": "string",
-                "testDate": "string",
-                "testScore": "string",
-                "testStatus": "string",
-                "testSource": "string"
-            }
-        ],
-        "PersonProspect": [
-            {
-                "ProspectProgramInterests": [
-                    {
-                        "prospectAcademicLevel": "string",
-                        "prospectAcademicProgram": "string",
-                        "prospectMajor": "string",
-                        "prospectFinancialAidIntent": True,
-                        "prospectFull-Time/PartTimeIntent": "string",
-                        "prospectInterestedProgramStatus": "string",
-                        "prospectStartTerm": "string",
-                        "prospectStartDate": "string",
-                        "prospectStudentType": "string",
-                        "residentOrCommuterIntent": True
-                    }
-                ],
-                "highlyDesirable": "string",
-                "prospectComments": "string",
-                "prospectAdmissionsCounselor": "string",
-                "prospectExtracurricularInterests": "string",
-                "prospectContinuedInterestIndicators": "string",
-                "athleticProspectIndicator": True,
-                "prospectStatus": "string",
-                "prospectLegacy": True,
-                "optOutFields": "string",
-                "currentRecruitmentVendor": "string",
-                "currentRecruitmentCoachID": "string",
-                "createdDateTime": "2017-11-22T17:06:02.617Z",
-                "firstCommunicationType": "2017-11-22T17:06:02.617Z",
-                "firstContactedDateTime": "2017-11-22T17:06:02.617Z",
-                "firstCommunicatedDateTime": "2017-11-22T17:06:02.617Z",
-                "lastCommunicatedDateTime": "2017-11-22T17:06:02.617Z",
-                "totalMissedAttemptsAfterCommunicated": 0,
-                "totalAttemptsToContact": 0,
-                "totalAttemptsToCommunicate": 0,
-                "totalAttemptsToContactAfterCommunicate": 0,
-                "leadQuality": 0,
-                "nextCommunicationObjective": "string",
-                "ProspectSources": [
-                    {
-                        "sourceCode": "string",
-                        "sourceDateTime": "2017-11-22T17:06:02.617Z",
-                        "sourceDetail": "string",
-                        "sourceMedium": "string",
-                        "sourceClickId": "string"
-                    }
-                ],
-                "ProspectActivity": [
-                    {
-                        "activityProgramOfInterest": "string",
-                        "activityProgramStartTerm": "string",
-                        "activityProgramStartDate": "string",
-                        "activityCoachingVendor": "string",
-                        "activityCoachID": "string",
-                        "activityIDs": [
-                            {
-                                "activityId": "string",
-                                "activityIdType": "string"
-                            }
-                        ],
-                        "activityChannel": "string",
-                        "activityInitiator": "string",
-                        "activityStartDatetime": "2017-11-22T17:06:02.617Z",
-                        "activityStatus": "active",
-                        "activityDisposition": "TBD",
-                        "notes": "string",
-                        "resultingProspectStatus": "string",
-                        "optOutFields": "string"
-                    }
-                ],
-                "ProspectEvents": [
-                    {
-                        "eventAttended": "string",
-                        "eventDetails": "string",
-                        "eventAttendedDate": "string"
-                    }
-                ],
-                "ProspectRatings": [
-                    {
-                        "ratingProgramOfInterest": "string",
-                        "ratingStartTerm": "string",
-                        "ratingStartDate": "string",
-                        "ratingType": "string",
-                        "ratingScore": 0
-                    }
-                ]
-            }
-        ],
-        "PersonApplicant": [
-            {
-                "housingDesiredIndicator": True,
-                "admissionsCounselor": "string",
-                "applicantProspectStatus": "string",
-                "extracurricularInterests": "string",
-                "continuedInterestIndicators": "string",
-                "careerGoals": "string",
-                "educationalGoals": "string",
-                "applicantComments": "string",
-                "legacy": True,
-                "officialOffCampusVisitDate": "string",
-                "officialOnCampusVisitDate": "string",
-                "unofficialVisitDate": "string",
-                "applicantMisc1": "string",
-                "applicantMisc2": "string",
-                "applicantMisc3": "string",
-                "applicantMisc4": "string",
-                "restrictions": "string"
-            }
-        ],
-        "PersonApplications": [
-            {
-                "applicationSisId": "string",
-                "applicationCRMId": "string",
-                "applicationAlternateId": "string",
-                "applicationAlternateIdType": "string",
-                "intentToApplyForFinancialAid": True,
-                "applicationType": "string",
-                "startTerm": "string",
-                "academicProgram": "string",
-                "academicProgramCatalog": "string",
-                "academicLevel": "string",
-                "location": "string",
-                "campus": "string",
-                "college": "string",
-                "additionalMajors": "string",
-                "intendedAreaOfStudy": "string",
-                "applicantProspectStatusDate": "string",
-                "currentApplicationStatus": "string",
-                "currentApplicationStatusDate": "string",
-                "applicationDate": "string",
-                "decision": "string",
-                "decisionDate": "string",
-                "withdrawalDate": "string",
-                "withdrawalReason": "string",
-                "admitStatus": "string",
-                "degreeSought": "string",
-                "applicationComments": "string",
-                "influencedToApply": "string",
-                "fullTimePartTimeIntent": "string",
-                "applicationFeeReceiptIndicator": True,
-                "applicationFeeReceiptDate": "string",
-                "ApplicationCheckListItems": [
-                    {
-                        "checklistItemCode": "string",
-                        "checklistItemStatus": "string",
-                        "checklistItemDate": "string",
-                        "checklistItemAssignedDate": "string",
-                        "checklistItemInstance": "string",
-                        "checklistItemComment": "string",
-                        "checklistItemFaYear": 0
-                    }
-                ],
-                "ApplicationFinancialAid": [
-                    {
-                        "financialAidStatus": "string",
-                        "financialAidType": "string",
-                        "financialAidAwardAmount": "Unknown Type: double",
-                        "financialAidAwardYear": "string",
-                        "fafsaFiled": True
-                    }
-                ]
-            }
-        ]
+        "PersonRelations": [],
+        "PersonEducation": [],
+        "PersonTestScores": [],
+        "PersonProspect": {},
+        "PersonApplicant": {},
+        "PersonApplications": []
     }
         
     res["personSisId"] = "%d"%(Rand.get(999999)+1000000)
@@ -715,6 +472,12 @@ def generate_admissions_person():
     res["PersonAddresses"] = generate_person_addresses()
     res["PersonPhones"] = generate_person_phones()
     res["PersonEmails"] = generate_person_emails(given_name, family_name)
+    res["PersonRelations"] = generate_person_relations()
+    res["PersonEducation"] = generate_person_educations()
+    res["PersonProspect"] = generate_person_prospect()
+    res["PersonApplicant"] = generate_person_applicant()
+    
+    
     return res
 
 
@@ -804,3 +567,283 @@ def generate_person_emails(given_name, family_name):
             "preferredEmailIndicator": True
         })
     return res
+
+
+def generate_person_relation():
+    res = {
+        "typeOfRelationship": "string",
+        "relationGender": "string",
+        "relationPrefix": "string",
+        "relationSuffix": "string",
+        "relationFirstName": "string",
+        "relationLastName": "string",
+        "relationDeceased": True,
+        "relationSourceCode": "string",
+        "RelationAddresses": [
+            {
+                "relationAddressType": "string",
+                "relationAddressLine1": "string",
+                "relationAddressLine2": "string",
+                "relationAddressLine3": "string",
+                "relationAddressCity": "string",
+                "relationAddressState": "string",
+                "relationAddressPostalCode": "string",
+                "relationAddressCountry": "string"
+            }
+        ],
+        "RelationPhones": [
+            {
+                "relationPhoneNumber": "string",
+                "relationPhoneType": "string",
+                "relationPhoneExtension": 0
+            }
+        ],
+        "RelationEmails": [
+            {
+                "relationEmailAddress": "string",
+                "relationEmailAddressType": "string"
+            }
+        ]
+    }
+    return None # TODO
+
+
+def generate_person_relations():
+    return [] # TODO
+
+
+def generate_person_education():
+    res = {
+        "institutionAttendedCeebCode": "string",
+        "institutionAttendedFiceCode": "string",
+        "institutionAttendedName": "string",
+        "institutionAttendedAddressLine1": "string",
+        "institutionAttendedAddressLine2": "string",
+        "institutionAttendedAddressLine3": "string",
+        "institutionAttendedCity": "string",
+        "institutionAttendedState": "string",
+        "institutionAttendedPostalCode": "string",
+        "institutionAttendedCountry": "string",
+        "institutionAttendedType": "string",
+        "institutionAttendedStartDate": "string",
+        "institutionAttendedEndDate": "string",
+        "institutionAttendedStartYears": 0,
+        "institutionAttendedEndYears": 0,
+        "institutionAttendedTranscriptDate": "string",
+        "institutionAttendedTranscriptType": "string",
+        "institutionAttendedTranscriptStatus": "string",
+        "institutionAttendedCreditsEarned": "Unknown Type: float",
+        "institutionAttendedGpa": "Unknown Type: float",
+        "institutionAttendedClassRankPercentage": "Unknown Type: float",
+        "institutionAttendedClassRankNumerator": 0,
+        "institutionAttendedClassRankDenominator": 0,
+        "institutionAttendedGraduationType": "string",
+        "institutionAttendedTypeOfEducation": "string",
+        "institutionAttendedDiplomaReceived": True,
+        "EducationCredentials": [
+            {
+                "credentialInstitutionId": "string",
+                "institutionAttendedDegreeObtained": "string",
+                "institutionAttendedDegreeDate": "string",
+                "institutionAttendedCcdsObtained": "string",
+                "institutionAttendedCcdDates": "string",
+                "institutionAttendedMajor": "string",
+                "institutionAttendedMinor": "string",
+                "institutionAttendedSpecialization": "string"
+            }
+        ]
+    }
+        
+    return None
+
+
+def generate_person_educations():
+    return [] #TODO
+
+
+def generate_person_test_score():
+    res = {
+        "testName": "string",
+        "testDate": "string",
+        "testScore": "string",
+        "testStatus": "string",
+        "testSource": "string"
+    }
+    return None # TODO
+        
+
+def generate_person_test_scores():
+    return [] # TODO
+
+
+def generate_person_prospect():
+    res = {
+        "ProspectProgramInterests": [
+            {
+                "prospectAcademicLevel": "string",
+                "prospectAcademicProgram": "string",
+                "prospectMajor": "string",
+                "prospectFinancialAidIntent": True,
+                "prospectFull-Time/PartTimeIntent": "string",
+                "prospectInterestedProgramStatus": "string",
+                "prospectStartTerm": "string",
+                "prospectStartDate": "string",
+                "prospectStudentType": "string",
+                "residentOrCommuterIntent": True
+            }
+        ],
+        "highlyDesirable": "string",
+        "prospectComments": "string",
+        "prospectAdmissionsCounselor": "string",
+        "prospectExtracurricularInterests": "string",
+        "prospectContinuedInterestIndicators": "string",
+        "athleticProspectIndicator": True,
+        "prospectStatus": "string",
+        "prospectLegacy": True,
+        "optOutFields": "string",
+        "currentRecruitmentVendor": "string",
+        "currentRecruitmentCoachID": "string",
+        "createdDateTime": "2017-11-22T17:06:02.617Z",
+        "firstCommunicationType": "2017-11-22T17:06:02.617Z",
+        "firstContactedDateTime": "2017-11-22T17:06:02.617Z",
+        "firstCommunicatedDateTime": "2017-11-22T17:06:02.617Z",
+        "lastCommunicatedDateTime": "2017-11-22T17:06:02.617Z",
+        "totalMissedAttemptsAfterCommunicated": 0,
+        "totalAttemptsToContact": 0,
+        "totalAttemptsToCommunicate": 0,
+        "totalAttemptsToContactAfterCommunicate": 0,
+        "leadQuality": 0,
+        "nextCommunicationObjective": "string",
+        "ProspectSources": [
+            {
+                "sourceCode": "string",
+                "sourceDateTime": "2017-11-22T17:06:02.617Z",
+                "sourceDetail": "string",
+                "sourceMedium": "string",
+                "sourceClickId": "string"
+            }
+        ],
+        "ProspectActivity": [
+            {
+                "activityProgramOfInterest": "string",
+                "activityProgramStartTerm": "string",
+                "activityProgramStartDate": "string",
+                "activityCoachingVendor": "string",
+                "activityCoachID": "string",
+                "activityIDs": [
+                    {
+                        "activityId": "string",
+                        "activityIdType": "string"
+                    }
+                ],
+                "activityChannel": "string",
+                "activityInitiator": "string",
+                "activityStartDatetime": "2017-11-22T17:06:02.617Z",
+                "activityStatus": "active",
+                "activityDisposition": "TBD",
+                "notes": "string",
+                "resultingProspectStatus": "string",
+                "optOutFields": "string"
+            }
+        ],
+        "ProspectEvents": [
+            {
+                "eventAttended": "string",
+                "eventDetails": "string",
+                "eventAttendedDate": "string"
+            }
+        ],
+        "ProspectRatings": [
+            {
+                "ratingProgramOfInterest": "string",
+                "ratingStartTerm": "string",
+                "ratingStartDate": "string",
+                "ratingType": "string",
+                "ratingScore": 0
+            }
+        ]
+    }
+    return res #TODO
+
+
+def generate_person_applicant():
+    res = {
+        "housingDesiredIndicator": True,
+        "admissionsCounselor": "string",
+        "applicantProspectStatus": "string",
+        "extracurricularInterests": "string",
+        "continuedInterestIndicators": "string",
+        "careerGoals": "string",
+        "educationalGoals": "string",
+        "applicantComments": "string",
+        "legacy": True,
+        "officialOffCampusVisitDate": "string",
+        "officialOnCampusVisitDate": "string",
+        "unofficialVisitDate": "string",
+        "applicantMisc1": "string",
+        "applicantMisc2": "string",
+        "applicantMisc3": "string",
+        "applicantMisc4": "string",
+        "restrictions": "string"
+    }
+    return res
+
+
+def generate_person_applications():
+    return [] #TODO
+
+
+def generate_person_application():
+    res = {
+        "applicationSisId": "string",
+        "applicationCRMId": "string",
+        "applicationAlternateId": "string",
+        "applicationAlternateIdType": "string",
+        "intentToApplyForFinancialAid": True,
+        "applicationType": "string",
+        "startTerm": "string",
+        "academicProgram": "string",
+        "academicProgramCatalog": "string",
+        "academicLevel": "string",
+        "location": "string",
+        "campus": "string",
+        "college": "string",
+        "additionalMajors": "string",
+        "intendedAreaOfStudy": "string",
+        "applicantProspectStatusDate": "string",
+        "currentApplicationStatus": "string",
+        "currentApplicationStatusDate": "string",
+        "applicationDate": "string",
+        "decision": "string",
+        "decisionDate": "string",
+        "withdrawalDate": "string",
+        "withdrawalReason": "string",
+        "admitStatus": "string",
+        "degreeSought": "string",
+        "applicationComments": "string",
+        "influencedToApply": "string",
+        "fullTimePartTimeIntent": "string",
+        "applicationFeeReceiptIndicator": True,
+        "applicationFeeReceiptDate": "string",
+        "ApplicationCheckListItems": [
+            {
+                "checklistItemCode": "string",
+                "checklistItemStatus": "string",
+                "checklistItemDate": "string",
+                "checklistItemAssignedDate": "string",
+                "checklistItemInstance": "string",
+                "checklistItemComment": "string",
+                "checklistItemFaYear": 0
+            }
+        ],
+        "ApplicationFinancialAid": [
+            {
+                "financialAidStatus": "string",
+                "financialAidType": "string",
+                "financialAidAwardAmount": "Unknown Type: double",
+                "financialAidAwardYear": "string",
+                "fafsaFiled": True
+            }
+        ]
+    }
+    return res #TODO
