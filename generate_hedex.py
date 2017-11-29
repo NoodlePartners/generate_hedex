@@ -2,6 +2,7 @@ from names import Names
 from addresses import Addresses
 from emails import Emails
 from rand import Rand
+from dates import Dates
 import sys
 import json
 import datetime
@@ -423,22 +424,22 @@ def generate_admissions_person():
         "formerLastName": "",
         "placeOfBirth": "",
         "maritalStatus": "",
-        "religiousPreference": "",
+        # "religiousPreference": "",
         "veteranStatus": "",
         "ipedsHispanicLatino": True,
         "ethnicity": "",
         "listOfRaces": "",
         "languagesSpoken": "",
-        "primaryLanguage": "string",
-        "alienStatus": "string",
-        "countryOfCitizenship": "string",
-        "countryOfResidence": "string",
-        "alienRegistrationNumber": "string",
-        "immigrationStatus": "string",
-        "visaType": "string",
-        "personOriginationCode": "string",
-        "personOriginationDate": "string",
-        "personSourceCode": "string",
+        "primaryLanguage": "",
+        "alienStatus": "",
+        "countryOfCitizenship": "",
+        "countryOfResidence": "",
+        "alienRegistrationNumber": "",
+        "immigrationStatus": "",
+        "visaType": "",
+#        "personOriginationCode": "string",
+#        "personOriginationDate": "string",
+#        "personSourceCode": "string",
         "PersonAddresses": [],
         "PersonPhones": [],
         "PersonEmails": [],
@@ -446,8 +447,7 @@ def generate_admissions_person():
         "PersonEducation": [],
         "PersonTestScores": [],
         "PersonProspect": {},
-        "PersonApplicant": {},
-        "PersonApplications": []
+        "PersonApplicant": {}
     }
         
     res["personSisId"] = "%d"%(Rand.get(999999)+1000000)
@@ -468,7 +468,45 @@ def generate_admissions_person():
     addr_x = Addresses.get_address()
     res["placeOfBirth"] = addr_x["city"]+", "+addr_x["state"]+" "+addr_x["country"]
     res["maritalStatus"] = name_x["marital_status"]
-
+    # res["religiousPreference"] = ""
+    res["veteranStatus"] = ""
+    # res["ethnicity"] = ""
+    res["listOfRaces"] = Rand.pick((("White",65),("Black",15),("Asian",10),("White|Black",5),("White|Asian",3),("Black|Asian",1)))
+    lspok = Rand.pick((("English",80),("English|Chinese",14),("English|Russian",6)))
+    if Rand.get_bool(8): # is from Mexico
+        res["ipedsHispanicLatino"] = True
+        plang = "Spanish"
+        lspok = "Spanish|" + lspok 
+        ccit = "MX"
+        if Rand.get_bool(25):
+            astat = None
+            cres = "MX"
+            anum = None
+        else:
+            astat = "J1"
+            cres = "US"
+            anum = "INS"+("%06d"%Rand.get(1000000))
+    else:
+        res["ipedsHispanicLatino"] = Rand.get_bool(15)
+        plang = "English"
+        if Rand.get_bool(20):
+            lspok += "|Spanish"
+        ccit = "US"
+        astat = None
+        cres = "US"
+        anum = None
+    res["countryOfCitizenship"] = cres
+    res["languagesSpoken"] = lspok
+    res["primaryLanguage"] = plang
+    res["countryOfCitizenship"] = ccit
+    res["alienStatus"] = astat
+    res["countryOfResidence"] = cres
+    res["alienRegistrationNumber"] = anum
+    res["immigrationStatus"] = astat
+    res["visaType"] = astat
+    # res["personOriginationCode"] = ""
+    # res["personOriginationDate"] = ""
+    # res["personSourceCode"] = ""
     res["alternateIDs"] = generate_alternate_ids()
     res["PersonAddresses"] = generate_person_addresses()
     res["PersonPhones"] = generate_person_phones()
@@ -478,14 +516,13 @@ def generate_admissions_person():
     res["PersonProspect"] = generate_person_prospect()
     res["PersonApplicant"] = generate_person_applicant()
     
-    
     return res
 
 
 def generate_alternate_ids():
     ai = {
         "personAlternateId": "%d"%(Rand.get(999999)+1000000),
-        "personAlternateIdType": "FPS"
+        "personAlternateIdType": "Acme"
     }
     return [ai]
 
@@ -493,14 +530,14 @@ def generate_alternate_ids():
 def generate_person_address():
     res = {
         "addressType": 0,
-        "addressLine1": "string",
+        "addressLine1": "",
         "addressLine2": "",
         "addressLine3": "",
-        "city": "string",
-        "state": "string",
-        "postalCode": "string",
-        "county": "string",
-        "country": "string",
+        "city": "",
+        "state": "",
+        "postalCode": "",
+        "county": "",
+        "country": "",
         "preferredResidenceIndicator": True,
         "preferredMailingAddressIndicator": True,
         # "addressStartDate": "string",
@@ -688,13 +725,13 @@ def generate_prospect_program_interest():
     res = {
         "prospectAcademicLevel": "Masters",
         "prospectAcademicProgram": "MSW",
-        "prospectMajor": "",
+        # "prospectMajor": "",
         "prospectFinancialAidIntent": False,
         "prospectFull-Time/PartTimeIntent": "Part Time",
         "prospectInterestedProgramStatus": "",
         "prospectStartTerm": "Spring 2018",
-        "prospectStartDate": "",
-        "prospectStudentType": "",
+        # "prospectStartDate": "",
+        # "prospectStudentType": "",
         "residentOrCommuterIntent": False
     }
 
@@ -705,23 +742,29 @@ def generate_prospect_program_interests():
 
 def generate_prospect_source():
     res = {
-        "sourceCode": "",
-        "sourceDateTime": "",
-        "sourceDetail": "",
-        "sourceMedium": "",
+        "sourceCode": "X" + ("%06d"%Rand.get(1000000)),
+        "sourceDateTime": Dates.get_date_in_range("2017-10-01", 45),
+        "sourceDetail": "X" + ("%06d"%Rand.get(1000000)),
+        "sourceMedium": Rand.pick((("Web Search",70),("Social",30))),
         "sourceClickId": Rand.get(100000000)
     }
-    return res #TODO
+    return res
 
 
 def generate_prospect_sources():
-    return [] #TODO
+    res = []
+    n = Rand.pick(((1,50),(2,25),(3,13),(4,12)))
+    i = 0
+    while i<n:
+        res.append(generate_prospect_source())
+        i += 1
+    return res
 
 
 def generate_activity_ids():
     res = [{
         "activityId": "%d"%(Rand.get(1000000)+1000000),
-        "activityIdType": "FPS"
+        "activityIdType": "Acme"
     }]
 
 
@@ -729,7 +772,7 @@ def generate_prospect_activity(program, term, vendor, coachId, channel, initiato
     res = {
         "activityProgramOfInterest": program,
         "activityProgramStartTerm": term,
-        "activityProgramStartDate": "",
+        # "activityProgramStartDate": "",
         "activityCoachingVendor": vendor,
         "activityCoachID": coachId,
         "activityIDs": [],
@@ -749,7 +792,7 @@ def generate_prospect_activity(program, term, vendor, coachId, channel, initiato
 def generate_prospect_activities():
     program = "MSW"
     term = Rand.pick((("Spring 2018",70),("Summer 2018",10),("Fall 2018",20)))
-    vendor = "FPS"
+    vendor = "Acme"
     coachId = "C" + ("%03d"%Rand.get(1000))
     channel = Rand.pick((("phone",75),("email",15),("text",10)))
     initiator = "coach"
@@ -771,7 +814,7 @@ def generate_prospect_activities():
         res.append(generate_prospect_activity(program, term, vendor, coachId, channel, initiator,
                                               startDatetime, status, disposition, notes, resultingStatus))
         startDatetime_dt += datetime.timedelta(1, 3600) # 25 hours later
-        i+=1
+        i += 1
     return res
 
 
@@ -797,7 +840,7 @@ def generate_prospect_rating():
     res = {
         "ratingProgramOfInterest": "MSW",
         "ratingStartTerm": "Sprint 2018",
-        "ratingStartDate": "",
+        # "ratingStartDate": "",
         "ratingType": "demographic score",
         "ratingScore": Rand.get(4)
     }        
@@ -810,30 +853,37 @@ def generate_prospect_ratings():
 
 
 def generate_person_prospect():
+    dt = []
+    last = Dates.get_date_in_range("2017-10-01", 45, False)
+    dt.append(last)
+    for j in (1,4,6):        
+        last += datetime.timedelta(Rand.get(j)+1)
+        dt.append(last)
+    isoformat = "%Y-%m-%dT%H:%M-04:00"
     res = {
         "ProspectProgramInterests": [],
-        "highlyDesirable": "string",
-        "prospectComments": "string",
-        "prospectAdmissionsCounselor": "string",
-        "prospectExtracurricularInterests": "string",
-        "prospectContinuedInterestIndicators": "string",
-        "athleticProspectIndicator": True,
-        "prospectStatus": "string",
-        "prospectLegacy": True,
-        "optOutFields": "string",
-        "currentRecruitmentVendor": "string",
-        "currentRecruitmentCoachID": "string",
-        "createdDateTime": "2017-11-22T17:06:02.617Z",
-        "firstCommunicationType": "2017-11-22T17:06:02.617Z",
-        "firstContactedDateTime": "2017-11-22T17:06:02.617Z",
-        "firstCommunicatedDateTime": "2017-11-22T17:06:02.617Z",
-        "lastCommunicatedDateTime": "2017-11-22T17:06:02.617Z",
+        "highlyDesirable": Rand.pick((("High",20),("Medium",50),("Low",30))),
+        "prospectComments": "hello, world!",
+        "prospectAdmissionsCounselor": "L"+("%06d"%Rand.get(1000000)),
+        "prospectExtracurricularInterests": Rand.pick((("Kayaking",20),("Skiing",20),("Swimming",20),("Fencing",20),("Baseball",20))),
+        # "prospectContinuedInterestIndicators": "string",
+        "athleticProspectIndicator": Rand.get_bool(20),
+        "prospectStatus": "active",
+        "prospectLegacy": Rand.get_bool(20),
+        "optOutFields": "",
+        "currentRecruitmentVendor": "Acme",
+        "currentRecruitmentCoachID": "L"+("%06d"%Rand.get(1000000)),
+        "createdDateTime": dt[0].strftime(isoformat),
+        "firstCommunicationType": Rand.pick((("Phone",70),("Email",30))),
+        "firstContactedDateTime": dt[1].strftime(isoformat),
+        "firstCommunicatedDateTime": dt[2].strftime(isoformat),
+        "lastCommunicatedDateTime": dt[3].strftime(isoformat),
         "totalMissedAttemptsAfterCommunicated": 0,
-        "totalAttemptsToContact": 0,
-        "totalAttemptsToCommunicate": 0,
-        "totalAttemptsToContactAfterCommunicate": 0,
-        "leadQuality": 0,
-        "nextCommunicationObjective": "string",
+        "totalAttemptsToContact": 3+Rand.get(4),
+        "totalAttemptsToCommunicate": 7+Rand.get(4),
+        "totalAttemptsToContactAfterCommunicate": 3,
+        "leadQuality": Rand.get(4),
+        "nextCommunicationObjective": "try to close",
         "ProspectSources": [],
         "ProspectActivity": [],
         "ProspectEvents": [],
@@ -845,113 +895,175 @@ def generate_person_prospect():
     return res
 
 
-def generate_person_applicant():
+def generate_application_check_list_item():
     res = {
-        "housingDesiredIndicator": True,
-        "admissionsCounselor": "string",
-        "applicantProspectStatus": "string",
-        "extracurricularInterests": "string",
-        "continuedInterestIndicators": "string",
-        "careerGoals": "string",
-        "educationalGoals": "string",
-        "applicantComments": "string",
-        "legacy": True,
-        "officialOffCampusVisitDate": "string",
-        "officialOnCampusVisitDate": "string",
-        "unofficialVisitDate": "string",
-        "applicantMisc1": "string",
-        "applicantMisc2": "string",
-        "applicantMisc3": "string",
-        "applicantMisc4": "string",
-        "restrictions": "string"
+        "checklistItemCode": Rand.pick((("Letter of Reference from " +
+                                         Rand.pick((("John Doe",25),
+                                                    ("Jane Poe",25),
+                                                    ("Joe Blow",25),
+                                                    ("Jill Crow",25))),50),
+                                        ("Transcript from " + 
+                                         Rand.pick((("Malcolm S White University",25),
+                                                    ("Springfield University",25),
+                                                    ("State University of Euphoria",25),
+                                                    ("Rummidge College",25))),50))),
+        "checklistItemStatus": Rand.pick((("Received",50),("Waved",10),("Awaiting",40))),
+        "checklistItemDate": Dates.get_date_in_range("2017-10-01",45),
+        # "checklistItemAssignedDate": "",
+        # "checklistItemInstance": "string",
+        # "checklistItemComment": "string",
+        # "checklistItemFaYear": 0
     }
     return res
 
 
-def generate_person_applications():
-    return [] #TODO
-
-
-def generate_application_check_list_item():
-    res = {
-        "checklistItemCode": "string",
-        "checklistItemStatus": "string",
-        "checklistItemDate": "string",
-        "checklistItemAssignedDate": "string",
-        "checklistItemInstance": "string",
-        "checklistItemComment": "string",
-        "checklistItemFaYear": 0
-    }        
-    return {} #TODO
-
-
 def generate_application_check_list_items():
-    return [] #TODO
-
-
-def generate_application_check_list_item():
-    res = {
-        "checklistItemCode": "string",
-        "checklistItemStatus": "string",
-        "checklistItemDate": "string",
-        "checklistItemAssignedDate": "string",
-        "checklistItemInstance": "string",
-        "checklistItemComment": "string",
-        "checklistItemFaYear": 0
-    }
+    res = []
+    n = Rand.get(3)+3
+    i = 0
+    while i<n:
+        res.append(generate_application_check_list_item())
+        i += 1
     return res
 
 
 def generate_application_financial_aid():
     res = {
-        "financialAidStatus": "string",
-        "financialAidType": "string",
-        "financialAidAwardAmount": "Unknown Type: double",
-        "financialAidAwardYear": "string",
+        "financialAidStatus": "applied",
+        "financialAidType": "grant",
+        # "financialAidAwardAmount": "Unknown Type: double",
+        # "financialAidAwardYear": "string",
         "fafsaFiled": True
     }
     return res
         
 
-def generate_application_financial_aids():
-    return [] #TODO
+def generate_application_financial_aids(f):
+    res = []
+    if f:
+        res.append(generate_application_financial_aid())
+    return res
 
 
 def generate_person_application():
     res = {
-        "applicationSisId": "string",
-        "applicationCRMId": "string",
-        "applicationAlternateId": "string",
-        "applicationAlternateIdType": "string",
+        "applicationSisId": "",
+        "applicationCRMId": "",
+        # "applicationAlternateId": None,
+        # "applicationAlternateIdType": None,
         "intentToApplyForFinancialAid": True,
-        "applicationType": "string",
-        "startTerm": "string",
-        "academicProgram": "string",
-        "academicProgramCatalog": "string",
-        "academicLevel": "string",
-        "location": "string",
-        "campus": "string",
-        "college": "string",
-        "additionalMajors": "string",
-        "intendedAreaOfStudy": "string",
-        "applicantProspectStatusDate": "string",
-        "currentApplicationStatus": "string",
-        "currentApplicationStatusDate": "string",
-        "applicationDate": "string",
-        "decision": "string",
-        "decisionDate": "string",
-        "withdrawalDate": "string",
-        "withdrawalReason": "string",
-        "admitStatus": "string",
-        "degreeSought": "string",
-        "applicationComments": "string",
-        "influencedToApply": "string",
-        "fullTimePartTimeIntent": "string",
+        "applicationType": "",
+        "startTerm": "",
+        "academicProgram": "",
+        "academicProgramCatalog": "",
+        "academicLevel": "",
+        "location": "",
+        "campus": "",
+        "college": "",
+        # "additionalMajors": "",
+        # "intendedAreaOfStudy": "",
+        # "applicantProspectStatusDate": "",
+        "currentApplicationStatus": "",
+        "currentApplicationStatusDate": "",
+        "applicationDate": "",
+        # "decision": "",
+        # "decisionDate": "",
+        # "withdrawalDate": "",
+        # "withdrawalReason": "",
+        # "admitStatus": "",
+        "degreeSought": "",
+        "applicationComments": "",
+        # "influencedToApply": "",
+        "fullTimePartTimeIntent": "",
         "applicationFeeReceiptIndicator": True,
-        "applicationFeeReceiptDate": "string",
+        "applicationFeeReceiptDate": "",
         "ApplicationCheckListItems": [],
         "ApplicationFinancialAid": []
     }
+    status = Rand.pick((("started",60),("submitted",30),("completed",10)))
+    startedDate_dt = Dates.get_date_in_range("2017-10-15", 40, False)
+    if status=="started":
+        feePaid = False
+        currentStatusDate = startedDate_dt
+        submittedDate = None
+        completedDate = None
+    else:
+        submittedDate_dt = startedDate_dt + datetime.timedelta(Rand.get(7)+1)
+        submittedDate = submittedDate_dt.strftime("%Y-%m-%d")
+        feePaid = True
+        if status=="completed":
+            completedDate_dt = submittedDate_dt + datetime.timedelta(Rand.get(7)+1)
+            completedDate = completedDate_dt.strftime("%Y-%m-%d")
+            currentStatusDate = completedDate
+        else:
+            currentStatusDate = submittedDate
+            completedDate = None
+    financialAidIntent = Rand.get_bool(20)
+    res["applicationSisId"] = "A"+"%d"%(Rand.get(1000000)+1000000)
+    res["applicationCRMId"] = "A"+"%d"%(Rand.get(1000000)+1000000)
+    res["intentToApplyForFinancialAid"] = financialAidIntent
+    res["applicationType"] = "normal"
+    res["startTerm"] = "Spring 2018"
+    res["academicProgram"] = "MSW"
+    # res["academicProgramCatalog"] = ""
+    res["academicLevel"] = "Masters"
+    res["location"] = "online"
+    res["campus"] = "online"
+    res["college"] = "SSW"
+    # res["additionalMajors"] = ""
+    # res["intendedAreaOfStudy"] = ""
+    # res["applicantProspectStatusDate"] = ""
+    res["currentApplicationStatus"] = status
+    res["currentApplicationStatusDate"] = currentStatusDate
+    res["applicationDate"] = submittedDate
+    # res["decision"] = ""
+    # res["decisionDate"] = ""
+    # res["withdrawalDate"] = ""
+    # res["withdrawalReason"] = ""
+    # res["admitStatus"] = ""
+    res["degreeSought"] = "MSW"
+    res["applicationComments"] = ""
+    # res["influencedToApply"] = ""
+    res["fullTimePartTimeIntent"] = Rand.pick((("Part Time",80),("Full Time",20)))
+    res["applicationFeeReceiptIndicator"] = feePaid
+    res["applicationFeeReceiptDate"] = submittedDate
+
     res["ApplicationCheckListItems"] = generate_application_check_list_items()
-    res["ApplicationFinancialAid"] = generate_application_financial_aids()
-    return res #TODO
+    res["ApplicationFinancialAid"] = generate_application_financial_aids(financialAidIntent)
+    return res
+
+
+def generate_person_applications():
+    res = []
+    n = Rand.pick(((1,90),(2,8),(3,2)))
+    i = 0
+    while i < n:
+        res.append(generate_person_application())
+        i += 1
+    return res
+
+
+def generate_person_applicant():
+    res = {
+        "housingDesiredIndicator": False,
+        "admissionsCounselor": "L" + ("%06d"%Rand.get(1000000)),
+        "applicantProspectStatus": "normal",
+        # "extracurricularInterests": "string",
+        # "continuedInterestIndicators": "string",
+        # "careerGoals": "string",
+        # "educationalGoals": "string",
+        # "applicantComments": "string",
+        "legacy": Rand.get_bool(20),
+        # "officialOffCampusVisitDate": "string",
+        # "officialOnCampusVisitDate": "string",
+        # "unofficialVisitDate": "string",
+        # "applicantMisc1": "string",
+        # "applicantMisc2": "string",
+        # "applicantMisc3": "string",
+        # "applicantMisc4": "string",
+        # "restrictions": "string",
+        "PersonApplications": []
+    }
+    
+    res["PersonApplications"] = generate_person_applications()
+    return res
