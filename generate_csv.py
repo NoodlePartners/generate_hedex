@@ -99,12 +99,12 @@ while i < n:
     family_name = name["family_name"]
     data["First Name"] = given_name
     data["Last Name"] = family_name
-    data["Former Last Name"] = name["birth_name"]
+    data["Former Last Name"] = name["birth_family_name"]
 
     u_email = Emails.get_u_email(given_name, family_name)
     data["Community Email"] = u_email["email"]
 
-    data["Preferred Name"] = name["preferred_name"]
+    data["Preferred Name"] = name["preferred_given_name"]
 
     data["Primary Email"] = Emails.get_email(given_name, family_name)
     data["2ndary Email"] = Emails.get_email(given_name, family_name)
@@ -112,7 +112,7 @@ while i < n:
     data["Telephone Number"] = Addresses.get_phone()
 
     address = Addresses.get_address()
-    data["Home Address"] = address["address1"]
+    data["Home Address"] = address["building_number"]+ " " + address["street_name"]
     data["City"] = address["city"]
     data["State"] = address["state"]
     data["Country"] = address["country"]
