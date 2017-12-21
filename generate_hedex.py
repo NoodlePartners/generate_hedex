@@ -354,44 +354,83 @@ def generate_person_test_scores():
                 )
     return res
 
+hold_terms = []
+program_of_interest = "MSW"
 
 def generate_prospect_program_interest():
+    # Generate 
+    if hold_terms.__len__()>1:
+        x = hold_terms[0]
+    else:
+        x = ""
+    while True:
+        term = Rand.pick((("Summer 2018",50),("Fall 2018",40),("Spring 2019",10)))
+        if term != x:
+            break
+    hold_terms.append(term)
     res = {
         "prospectAcademicLevel": "Masters",
-        "prospectAcademicProgram": "MSW",
+        "prospectAcademicProgram": program_of_interest,
         # "prospectMajor": "",
         "prospectFinancialAidIntent": False,
-        "prospectFull-Time/PartTimeIntent": "Part Time",
+        "prospectFullTimePartTimeIntent": "Part Time",
         "prospectInterestedProgramStatus": "",
-        "prospectStartTerm": "Spring 2018",
+        "prospectStartTerm": term,
         # "prospectStartDate": "",
         # "prospectStudentType": "",
         "residentOrCommuterIntent": False
     }
+    return res
 
 
 def generate_prospect_program_interests():
-    return [generate_prospect_program_interest()]
+    global hold_terms
+    hold_terms = []
+    res = []
+    n = Rand.pick(((1,80),(2,20)))
+    i = 0
+    while i<n:
+        i += 1
+        res.append(generate_prospect_program_interest())
+    return res
 
 
-def generate_prospect_source():
+def generate_source_ids():
+    res = [{
+        "sourceId": "%d"%(Rand.get(1000000)+1000000),
+        "sourceIdType": "CMS"
+    }]
+    return res
+
+
+def generate_prospect_source(term):
     res = {
+        "sourceProgramOfInterest": program_of_interest,
+        "sourceStartTerm": term,
+        # "sourceStartDate": None,
+        "sourceIds": [],
         "sourceCode": "X" + ("%06d"%Rand.get(1000000)),
         "sourceDateTime": Dates.get_date_in_range("2017-10-01", 45),
         "sourceDetail": "X" + ("%06d"%Rand.get(1000000)),
         "sourceMedium": Rand.pick((("Web Search",70),("Social",30))),
         "sourceClickId": Rand.get(100000000)
     }
+    res["sourceIds"] = generate_source_ids()
     return res
 
 
 def generate_prospect_sources():
     res = []
-    n = Rand.pick(((1,50),(2,25),(3,13),(4,12)))
-    i = 0
-    while i<n:
-        res.append(generate_prospect_source())
-        i += 1
+    m = hold_terms.__len__()
+    j = 0
+    while j<m:
+        term = hold_terms[j]
+        j += 1
+        n = Rand.pick(((1,50),(2,25),(3,13),(4,12)))
+        i = 0
+        while i<n:
+            res.append(generate_prospect_source(term))
+            i += 1
     return res
 
 
@@ -400,6 +439,7 @@ def generate_activity_ids():
         "activityId": "%d"%(Rand.get(1000000)+1000000),
         "activityIdType": "Acme"
     }]
+    return res
 
 
 def generate_prospect_activity(program, term, vendor, coachId, channel, initiator, startDatetime, status, disposition, notes, resultingStatus):
@@ -424,31 +464,34 @@ def generate_prospect_activity(program, term, vendor, coachId, channel, initiato
         
 
 def generate_prospect_activities():
-    program = "MSW"
-    term = Rand.pick((("Spring 2018",70),("Summer 2018",10),("Fall 2018",20)))
-    vendor = "Acme"
-    coachId = "C" + ("%03d"%Rand.get(1000))
-    channel = Rand.pick((("phone",75),("email",15),("text",10)))
-    initiator = "coach"
-    status = "complete"
-    startDatetime_dt = datetime.datetime.strptime("2017-02-10T09:38", "%Y-%m-%dT%H:%M")
     res = []
-    n = Rand.get(11)
-    i = 0
-    while(i<n):
-        activityStartDatetime = startDatetime_dt.strftime("%Y-%m-%d")
-        if i == n-1:
-            disposition = "closed"
-            resultingStatus = "closed"
-        else:
-            disposition = "open"
-            resultingStatus = "open"
-        notes = "Spoke on " + activityStartDatetime
-        startDatetime = startDatetime_dt.strftime("%Y-%m-%dT%H:%M-04:00")
-        res.append(generate_prospect_activity(program, term, vendor, coachId, channel, initiator,
-                                              startDatetime, status, disposition, notes, resultingStatus))
-        startDatetime_dt += datetime.timedelta(1, 3600) # 25 hours later
-        i += 1
+    m = hold_terms.__len__()
+    j = 0
+    while j<m:
+        term = hold_terms[j]
+        j += 1
+        vendor = "Acme"
+        coachId = "C" + ("%03d"%Rand.get(1000))
+        channel = Rand.pick((("phone",75),("email",15),("text",10)))
+        initiator = "coach"
+        status = "complete"
+        startDatetime_dt = datetime.datetime.strptime("2017-02-10T09:38", "%Y-%m-%dT%H:%M")
+        n = Rand.get(11)
+        i = 0
+        while(i<n):
+            activityStartDatetime = startDatetime_dt.strftime("%Y-%m-%d")
+            if i == n-1:
+                disposition = "closed"
+                resultingStatus = "closed"
+            else:
+                disposition = "open"
+                resultingStatus = "open"
+            notes = "Spoke on " + activityStartDatetime
+            startDatetime = startDatetime_dt.strftime("%Y-%m-%dT%H:%M-04:00")
+            res.append(generate_prospect_activity(program_of_interest, term, vendor, coachId, channel, initiator,
+                                                startDatetime, status, disposition, notes, resultingStatus))
+            startDatetime_dt += datetime.timedelta(1, 3600) # 25 hours later
+            i += 1
     return res
 
 
@@ -470,10 +513,10 @@ def generate_prospect_events():
     return []
 
 
-def generate_prospect_rating():
+def generate_prospect_rating(term):
     res = {
-        "ratingProgramOfInterest": "MSW",
-        "ratingStartTerm": "Sprint 2018",
+        "ratingProgramOfInterest": program_of_interest,
+        "ratingStartTerm": term,
         # "ratingStartDate": "",
         "ratingType": "demographic score",
         "ratingScore": Rand.get(4)
@@ -482,7 +525,13 @@ def generate_prospect_rating():
 
 
 def generate_prospect_ratings():
-    res = [generate_prospect_rating()]
+    res = []
+    m = hold_terms.__len__()
+    j = 0
+    while j<m:
+        term = hold_terms[j]
+        j += 1
+        res.append(generate_prospect_rating(term))
     return res
 
 
@@ -522,9 +571,19 @@ def generate_person_prospect():
         "ProspectEvents": [],
         "ProspectRatings": []
     }
+    # ProspectProgramInterests must be first
+    res["ProspectProgramInterests"] = generate_prospect_program_interests()
     res["ProspectSources"] = generate_prospect_sources()
     res["ProspectActivity"] = generate_prospect_activities()
     res["ProspectEvents"] = generate_prospect_events()
+    return res
+
+
+def generate_application_alternate_ids():
+    res = [{
+        "applicationAlternateId": "%d"%(Rand.get(1000000)+1000000),
+        "applicationAlternateIdType": "SIS"
+    }]
     return res
 
 
@@ -578,10 +637,19 @@ def generate_application_financial_aids(f):
     return res
 
 
+hold_admitted = False
+hold_admitted_date = ""
+hold_admitted_date_dt = None
+
+
 def generate_person_application():
+    global hold_admitted
+    global hold_admitted_date
+    global hold_admitted_date_dt
     res = {
         "applicationSisId": "",
         "applicationCRMId": "",
+        "applicationAlternateIds": [],
         # "applicationAlternateId": None,
         # "applicationAlternateIdType": None,
         "intentToApplyForFinancialAid": True,
@@ -595,10 +663,15 @@ def generate_person_application():
         "college": "",
         # "additionalMajors": "",
         # "intendedAreaOfStudy": "",
-        # "applicantProspectStatusDate": "",
+        "applicantProspectStatusDate": "",
         "currentApplicationStatus": "",
         "currentApplicationStatusDate": "",
-        "applicationDate": "",
+        "applicationStarted": "",
+        "applicationStartedDate": "",
+        "applicationCompleted": "",
+        "applicationCompletedDate": "",
+        "applicationSubmitted": "",
+        "applicationSubmittedDate": "",
         # "decision": "",
         # "decisionDate": "",
         # "withdrawalDate": "",
@@ -614,27 +687,35 @@ def generate_person_application():
         "ApplicationFinancialAid": []
     }
     status = Rand.pick((("started",60),("submitted",30),("completed",10)))
-    startedDate_dt = Dates.get_date_in_range("2017-10-15", 40, False)
-    startedDate = startedDate_dt.strftime(isoformat)
+    applicationStartedDate_dt = Dates.get_date_in_range("2017-10-15", 40, False)
+    applicationStartedDate = applicationStartedDate_dt.strftime(isoformat)
+    applicationStarted = "Yes"
     if status=="started":
         feePaid = False
-        currentStatusDate = startedDate
-        submittedDate = None
-        completedDate = None
+        applicationStarted = "Yes"
+        currentStatusDate = applicationStartedDate
+        applicationSubmittedDate = ""
+        applicationCompletedDate = ""
+        applicationSubmitted = "No"
+        applicationCompleted = "No"
     else:
-        submittedDate_dt = startedDate_dt + datetime.timedelta(Rand.get(7)+1)
-        submittedDate = submittedDate_dt.strftime(isoformat)
+        applicationSubmittedDate_dt = applicationStartedDate_dt + datetime.timedelta(Rand.get(7)+1)
+        applicationSubmittedDate = applicationSubmittedDate_dt.strftime(isoformat)
         feePaid = True
+        applicationSubmitted = "Yes"
         if status=="completed":
-            completedDate_dt = submittedDate_dt + datetime.timedelta(Rand.get(7)+1)
-            completedDate = completedDate_dt.strftime(isoformat)
-            currentStatusDate = completedDate
+            applicationCompletedDate_dt = applicationSubmittedDate_dt + datetime.timedelta(Rand.get(7)+1)
+            applicationCompletedDate = applicationCompletedDate_dt.strftime(isoformat)
+            currentStatusDate = applicationCompletedDate
+            applicationCompleted = "Yes"
         else:
-            currentStatusDate = submittedDate
-            completedDate = None
+            currentStatusDate = applicationSubmittedDate
+            applicationCompletedDate = ""
+            applicationCompleted = "No"
     financialAidIntent = Rand.get_bool(20)
     res["applicationSisId"] = "A"+"%d"%(Rand.get(1000000)+1000000)
     res["applicationCRMId"] = "A"+"%d"%(Rand.get(1000000)+1000000)
+    res["applicationAlternateIds"] = generate_application_alternate_ids()
     res["intentToApplyForFinancialAid"] = financialAidIntent
     res["applicationType"] = "normal"
     res["startTerm"] = "Spring 2018"
@@ -647,20 +728,49 @@ def generate_person_application():
     # res["additionalMajors"] = ""
     # res["intendedAreaOfStudy"] = ""
     # res["applicantProspectStatusDate"] = ""
+    res["applicantProspectStatusDate"] = currentStatusDate
+    res["applicationStarted"] = applicationStarted
+    res["applicationStartedDate"] = applicationStartedDate
+    res["applicationCompleted"] = applicationCompleted
+    res["applicationCompletedDate"] = applicationCompletedDate
+    res["applicationSubmitted"] = applicationSubmitted
+    res["applicationSubmittedDate"] = applicationSubmittedDate
+    # Only one of the applications can be admitted
+    if not hold_admitted and applicationCompleted == "Yes" and Rand.get_bool(80):
+        decision = Rand.pick((("admitted", 90), ("rejected", 10)))
+        decisionDate_dt = applicationCompletedDate_dt + datetime.timedelta(Rand.get(7)+1)
+        decisionDate = decisionDate_dt.strftime(isoformat)
+        if decision == "admitted":
+            hold_admitted = True
+            hold_admitted_date = decisionDate
+            hold_admitted_date_dt = decisionDate_dt
+    else:
+        decision = ""
+        decisionDate = ""
+    res["decision"] = decision
+    res["decisionDate"] = decisionDate
+    if applicationSubmitted == "Yes" and decision == "" and Rand.get_bool(10):
+        withdrawalDate_dt = applicationSubmittedDate_dt + datetime.timedelta(Rand.get(7)+1)
+        withdrawalDate = withdrawalDate_dt.strftime(isoformat)
+        withdrawalReason = Rand.pick((("financial", 40), ("family", 60)))
+        status = "withdrawn"
+        currentStatusDate = withdrawalDate
+        admitStatus = Rand.pick((("admitted",90),("open",10)))
+    else:
+        withdrawalDate = ""
+        withdrawalReason = ""
+        admitStatus = ""
+    res["withdrawalDate"] = withdrawalDate
+    res["withdrawalReason"] = withdrawalReason
     res["currentApplicationStatus"] = status
     res["currentApplicationStatusDate"] = currentStatusDate
-    res["applicationDate"] = submittedDate
-    # res["decision"] = ""
-    # res["decisionDate"] = ""
-    # res["withdrawalDate"] = ""
-    # res["withdrawalReason"] = ""
-    # res["admitStatus"] = ""
-    res["degreeSought"] = "MSW"
+    res["admitStatus"] = admitStatus
+    res["degreeSought"] = program_of_interest
     res["applicationComments"] = ""
     # res["influencedToApply"] = ""
     res["fullTimePartTimeIntent"] = Rand.pick((("Part Time",80),("Full Time",20)))
     res["applicationFeeReceiptIndicator"] = feePaid
-    res["applicationFeeReceiptDate"] = submittedDate
+    res["applicationFeeReceiptDate"] = applicationSubmittedDate
 
     res["ApplicationCheckListItems"] = generate_application_check_list_items()
     res["ApplicationFinancialAid"] = generate_application_financial_aids(financialAidIntent)
@@ -678,10 +788,30 @@ def generate_person_applications():
 
 
 def generate_person_applicant():
+    global hold_admitted
+    global hold_admitted_date
+    global hold_admitted_date_dt
+    # This has to go first, as it picks the hold_admitted value
+    hold_admitted = False
+    hold_admitted_date = ""
+    hold_admitted_date_dt = None
+    person_applications = generate_person_applications()
+
+    if hold_admitted:
+        applicantEnrolled = Rand.get_bool(80)
+        applicantEnrolledDate = (hold_admitted_date_dt +  datetime.timedelta(Rand.get(7)+1)).strftime(isoformat)
+    else:
+        applicantEnrolled = False
+        applicantEnrolledDate = ""
+
     res = {
         "housingDesiredIndicator": False,
         "admissionsCounselor": "L" + ("%06d"%Rand.get(1000000)),
         "applicantProspectStatus": "normal",
+        "applicantAdmitted": hold_admitted,
+        "applicantAdmittedDate": hold_admitted_date,
+        "applicantEnrolled": False,
+        "applicantEnrolledDate": applicantEnrolledDate,
         # "extracurricularInterests": "string",
         # "continuedInterestIndicators": "string",
         # "careerGoals": "string",
@@ -696,10 +826,9 @@ def generate_person_applicant():
         # "applicantMisc3": "string",
         # "applicantMisc4": "string",
         # "restrictions": "string",
-        "PersonApplications": []
+        "PersonApplications": person_applications
     }
     
-    res["PersonApplications"] = generate_person_applications()
     return res
 
 
