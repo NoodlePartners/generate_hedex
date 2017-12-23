@@ -13,7 +13,10 @@ class Rand(object):
 
     @classmethod
     def pick(self, vals):
-        t = self.get(100)
+        s = 0
+        for val in vals:
+            s += val[1]
+        t = self.get(s)
         p = 0
         for val in vals:
             p += val[1]
