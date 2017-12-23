@@ -78,10 +78,10 @@ def generate_admissions_person():
         "PersonPhones": [],
         "PersonEmails": [],
         "PersonRelations": [],
-        "PersonEducation": [],
-        "PersonTestScores": [],
+#        "PersonEducation": [],  Might not be added if the person isn't an applicant
+#        "PersonTestScores": [], Might not be added if the person isn't an applicant
         "PersonProspect": {},
-        "PersonApplicant": {}
+#        "PersonApplicant": {} Might not be added if the person isn't an applicant
     }
         
     res["personSisId"] = "%d"%(Rand.get(999999)+1000000)
@@ -146,9 +146,12 @@ def generate_admissions_person():
     res["PersonPhones"] = generate_person_phones()
     res["PersonEmails"] = generate_person_emails(given_name, family_name)
     res["PersonRelations"] = generate_person_relations()
-    res["PersonEducation"] = generate_person_educations()
     res["PersonProspect"] = generate_person_prospect()
-    res["PersonApplicant"] = generate_person_applicant()
+    person_applicant = generate_person_applicant()
+    if person_applicant:
+        res["PersonApplicant"] = person_applicant
+        res["PersonTestScores"] = generate_person_test_scores()
+        res["PersonEducation"] = generate_person_educations()
     
     return res
 
@@ -642,7 +645,7 @@ hold_admitted_date = ""
 hold_admitted_date_dt = None
 
 
-def generate_person_application():
+def generate_person_application(term):
     global hold_admitted
     global hold_admitted_date
     global hold_admitted_date_dt
@@ -718,8 +721,8 @@ def generate_person_application():
     res["applicationAlternateIds"] = generate_application_alternate_ids()
     res["intentToApplyForFinancialAid"] = financialAidIntent
     res["applicationType"] = "normal"
-    res["startTerm"] = "Spring 2018"
-    res["academicProgram"] = "MSW"
+    res["startTerm"] = term
+    res["academicProgram"] = program_of_interest
     # res["academicProgramCatalog"] = ""
     res["academicLevel"] = "Masters"
     res["location"] = "online"
@@ -778,11 +781,15 @@ def generate_person_application():
 
 
 def generate_person_applications():
+    # Most prospects don't actually apply
+    if hold_terms.__len__() < 2:
+        n = Rand.pick(((0,65),(1,35)))
+    else:
+        n = Rand.pick(((0,60),(1,35),(2,5)))
     res = []
-    n = Rand.pick(((1,90),(2,8),(3,2)))
     i = 0
     while i < n:
-        res.append(generate_person_application())
+        res.append(generate_person_application(hold_terms[i]))
         i += 1
     return res
 
@@ -796,6 +803,9 @@ def generate_person_applicant():
     hold_admitted_date = ""
     hold_admitted_date_dt = None
     person_applications = generate_person_applications()
+    
+    if person_applications.__len__() == 0:
+        return None
 
     if hold_admitted:
         applicantEnrolled = Rand.get_bool(80)
@@ -837,6 +847,6 @@ def generate_person_applicant():
 if sys.argv.__len__()<2:
     sys.stderr.write("number of records?\n")
 else:
-    sys.stdout.write(json.dumps(generate_hedex(int(sys.argv[1]))))
+    sys.stdout.write(json.dumps(generate_hedex(int(sys.argv[1])),indent=None))
     sys.stdout.write("\n")
 
