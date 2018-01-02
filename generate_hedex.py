@@ -229,7 +229,7 @@ def generate_person_emails(given_name, family_name):
     res.append({
         "emailAddress": Emails.get_u_email(given_name, family_name)["email"],
         "emailAddressType": "university",
-        "preferredEmailIndicator": True
+        "preferredEmailIndicator": False
     })
     res.append({
         "emailAddress": Emails.get_email(given_name, family_name),
@@ -239,8 +239,8 @@ def generate_person_emails(given_name, family_name):
     if Rand.get_bool(_percent_with_work_email):
         res.append({
             "emailAddress": Emails.get_email(given_name, family_name),
-            "emailAddressType": "home",
-            "preferredEmailIndicator": True
+            "emailAddressType": "work",
+            "preferredEmailIndicator": False
         })
     return res
 
@@ -360,12 +360,19 @@ def generate_person_test_scores():
 hold_terms = []
 program_of_interest = "MSW"
 
-def generate_prospect_program_interest():
-    # Generate 
-    if hold_terms.__len__()>1:
+def generate_prospect_program_interest(i):
+    # Store each term in the hold_terms global
+    global hold_terms
+    # Note that this assumes we won't generate more than two records.
+    status = "active"
+    if i>0:
         x = hold_terms[0]
+        # If there are two being generated, there is a 30% chance the second one is inactive
+        if Rand.get_bool(30):
+            status = "inactive"
     else:
         x = ""
+    # Make sure the second term is different from the first
     while True:
         term = Rand.pick((("Summer 2018",50),("Fall 2018",40),("Spring 2019",10)))
         if term != x:
@@ -377,7 +384,7 @@ def generate_prospect_program_interest():
         # "prospectMajor": "",
         "prospectFinancialAidIntent": False,
         "prospectFullTimePartTimeIntent": "Part Time",
-        "prospectInterestedProgramStatus": "",
+        "prospectInterestedProgramStatus": status,
         "prospectStartTerm": term,
         # "prospectStartDate": "",
         # "prospectStudentType": "",
@@ -393,8 +400,8 @@ def generate_prospect_program_interests():
     n = Rand.pick(((1,80),(2,20)))
     i = 0
     while i<n:
+        res.append(generate_prospect_program_interest(i))
         i += 1
-        res.append(generate_prospect_program_interest())
     return res
 
 
