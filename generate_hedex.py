@@ -418,18 +418,18 @@ def generate_prospect_source(term):
         "sourceProgramOfInterest": program_of_interest,
         "sourceStartTerm": term,
         # "sourceStartDate": "2018-02-20T03:09:47.236Z",
-        "sourcePrimaryID": "%d"%(Rand.get(1000000)+1000000),
+        "sourcePrimaryId": "%d"%(Rand.get(1000000)+1000000),
         "sourcePrimaryType": "Noodle Switch",
         "sourceAdditionalIds": [],
         "sourceCode": "X" + ("%06d"%Rand.get(1000000)),
         "sourceDateTime": Dates.get_date_in_range("2017-10-01", 45),
         "sourceDetail": "X" + ("%06d"%Rand.get(1000000)),
         "sourceMedium": Rand.pick((("Web Search",70),("Social",30))),
-        "sourceClickId": Rand.get(100000000)
-        "utmSource": Rand.pick((("Google",50),("Facebook",30),("Bing",20)))
+        "sourceClickId": Rand.get(100000000),
+        "utmSource": Rand.pick((("Google",50),("Facebook",30),("Bing",20))),
         "utmMedium": "Web Search",
         "utmCampaign": Rand.pick((("Red", 60),("Blue",40))),
-        "utmTerm": Rand.pick((("Yo", 50),("Dude",50)))
+        "utmTerm": Rand.pick((("Yo", 50),("Dude",50))),
         "utmContent": "Yow!"
     }
     res["sourceAdditionalIds"] = generate_source_ids()
