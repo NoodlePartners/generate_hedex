@@ -11,19 +11,21 @@ import datetime
 _birthday_start_date = "1990-10-10"
 _birthday_n_days = 5 * 365
 
-def generate_form_csv(n):
+def generate_form_json(n):
     i = 0
     rows = []
     while i < n:
         name_x = Names.get_name()
         given_name = name_x["given_name"]
         family_name = name_x["family_name"]
+        addr_x = Addresses.get_address()
         row = {
             "first_name": given_name,
             "last_name": family_name,
             "email": Emails.get_email(given_name, family_name),
             "birthdate": Rand.get_date_in_range(_birthday_start_date, _birthday_n_days),
             "phone": Addresses.get_phone(True),
+            "postalCode": address_x["postal_code"],
             "utmSource": Rand.pick((("Web Search",70),("Social",30))),
             "utmMedium": "Web",
             "utmCampaign": "Campaign %d" % Rand.get(1000),
@@ -46,6 +48,6 @@ def generate_form_csv(n):
 if sys.argv.__len__()<2:
     sys.stderr.write("number of records?\n")
 else:
-    sys.stdout.write(json.dumps(generate_form_csv(int(sys.argv[1])),indent=None))
+    sys.stdout.write(json.dumps(generate_form_json(int(sys.argv[1])),indent=None))
     sys.stdout.write("\n")
 
