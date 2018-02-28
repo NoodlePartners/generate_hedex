@@ -54,14 +54,13 @@ data_rows = [
 def generate_form_json():
     rows = []
     for r in data_rows:
-        print r
         row = {
             "first_name": r[0],
             "last_name": r[1],
             "email": r[5],
             "birthdate": r[2],
             "phone": r[4],
-            "postalCode": r[3],
+            "zipcode": r[3],
             "utmSource": Rand.pick((("Web Search",70),("Social",30))),
             "utmMedium": "Web",
             "utmCampaign": "Campaign %d" % Rand.get(1000),
