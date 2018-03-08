@@ -34,10 +34,9 @@ class Emails(object):
 
 
     _max_u_number = 999
-    _u_domain = "swigmore.edu"
 
     @classmethod
-    def get_u_email(self, given_name, family_name):
+    def get_u_email(self, given_name, family_name, u_domain="swigmore.edu"):
         id = (given_name[0] + family_name[0] + "%03d" %  (Rand.get(self._max_number)+1)).lower()
-        email = id + "@" + self._u_domain
+        email = id + "@" + u_domain
         return {"email": email, "id": id}
