@@ -68,6 +68,40 @@ def get_noodle_source_id(contact_id):
     return sha256(str.encode(('{}+{}'.format(datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S.%f'),contact_id)))).hexdigest()
 
 
+def get_status_and_decision(decided_datetime_str):
+    status = Rand.pick((
+                    ("", 10),
+                    ("Awaiting Submission",35),
+                    ("Awaiting Payment",5),
+                    ("Awaiting Materials",15),
+                    ("Awaiting Decision",5),
+                    ("Awaiting Confirmation",10),
+                    ("Decided",20)))
+    admit_date = ""
+    deny_date = ""
+    # The full list of decisions is
+    # "Admit","Deposit Pending","Deposit Paid (Enroll)","Admit/Decline","Deny","Defer",
+    # "Waitlist","Waitlist/Accept","Waitlist/Decline","Withdraw"
+    # But we won't use any of the Waitlist ones because thyey aren't relevant to us
+    if status == "Awaiting Confirmation" or status == "Decided":
+        decision = Rand.pick((
+            ("Admit",20),
+            ("Deposit Pending",10),
+            ("Deposit Paid (Enroll)",20),
+            ("Admit/Decline",10),
+            ("Deny",10),
+            ("Defer",10),
+            ("Withdraw",20)))
+        if decision == "Deny":
+            deny_date = decided_datetime_str
+        elif decision != "Withdraw":
+            admit_date = decided_datetime_str
+    else:
+        decision = ""
+    
+    return (status, decision, admit_date, deny_date)
+
+
 def make_person(f, ref, name_x, noodle_crm_id, program, term, zip2, email1, mp1, highest_ed, years_work, has_application, has_inquiry):
     row = []
     # "Ref"
@@ -327,7 +361,7 @@ def make_inquiry(f, ref, name_x, noodle_crm_id, program, term, zip2, email1, mp1
 
 datetime_format = "%Y-%m-%d %H:%M"
 
-def make_application(f, ref, status, program, term):
+def make_application(f, ref, program, term):
     row = []
     # "Application ID"
     row.append("%09d"%Rand.get(1000000000))
@@ -338,7 +372,6 @@ def make_application(f, ref, status, program, term):
     # "Academic Program"
     row.append(program)
     # "Application Status"
-    row.append(status)
     created_date = datetime.datetime.strptime(Dates.get_date_in_range("2017-12-15", 30),"%Y-%m-%d")
     created_datetime = created_date + datetime.timedelta(seconds=(8*3600+Rand.get(12*3600)))
     created_datetime_str = created_datetime.strftime(datetime_format)
@@ -349,16 +382,8 @@ def make_application(f, ref, status, program, term):
     completed_datetime_str = completed_datetime.strftime(datetime_format)
     decided_datetime = submitted_datetime + datetime.timedelta(days=2+Rand.get(4))
     decided_datetime_str = decided_datetime.strftime(datetime_format)
-    admit_date = ""
-    deny_date = ""
-    if status == "Accepted" or status == "Rejected":
-        decision = status
-        if status == "Accepted":
-            admit_date = decided_datetime.strftime("%Y-%m-%d")
-        else:
-            deny_date = decided_datetime.strftime("%Y-%m-%d")
-    else:
-        decision = ""
+    status, decision, admit_date, deny_date = get_status_and_decision(decided_datetime_str)
+    row.append(status)
     # "Decision"
     row.append(decision)
     # "Admit Date"
@@ -505,8 +530,7 @@ while i < n:
         program_x = program
         while j < n_apps:
             j += 1
-            status = Rand.pick((("Awaiting Submission",50),("Awaiting Payment",5),("In Progress",20),("Completed",10),("Accepted",10),("Rejected",5)))
-            make_application(file["application"], ref, status, program_x, term_x)
+            make_application(file["application"], ref, program_x, term_x)
             term_x = terms[Rand.get(n_terms)]
             program_x = get_program(i+j)
 
