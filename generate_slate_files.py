@@ -16,7 +16,7 @@ _u_domain = "cgu.edu"
 
 programs = ["MS in Information Systems & Technology (Online)",
             "MS in Marketing Analytics (Online)",
-            "MS in Evaluation (Online)"]
+            "MS in Evaluation and Applied Research (Online)"]
 n_programs = programs.__len__()
 
 terms = ["Summer 2018", "Fall 2018", "Spring 2019"]
