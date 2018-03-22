@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 from names import Names
 from addresses import Addresses
 from emails import Emails
