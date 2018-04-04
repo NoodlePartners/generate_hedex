@@ -32,7 +32,7 @@ def generate_form_json(n):
             "utmTerm": Rand.pick((("CGU",70),("Online",30))),
             "utmContent": Rand.pick((("hello",60),("world",40))),
             "sourceClickId": str(Rand.get(10000000)),
-            "highestLevelofEducation": Rand.pick((("High School",10),("Associate's",10),("Bachelor's in Progress",20),("Bachelor's",30),("Master's in progress",10),("Master's",10), ("Doctorate",10))),
+            "highestLevelOfEducation": Rand.pick((("High School",10),("Associate's",10),("Bachelor's in Progress",20),("Bachelor's",30),("Master's in progress",10),("Master's",10), ("Doctorate",10))),
             "testScoreStatus": Rand.pick((("Taken",40),("Registered",30),("Not Registered",30))),
             "yearsOfWorkExperience": Rand.pick((("0-1 years",20),("2-3 years",30),("3 or more years",50))),
             "urlOnSubmission": "http://www.google.com",

@@ -42,7 +42,7 @@ columns["person"] = ["Ref","SIS ID","Preferred","First","Middle","Last","Suffix"
                     "Interaction Private Comments"]
 
 columns["inquiry"] = ["Ref","noodleCrmId","sourcePrimaryId","firstName","lastName","Public Comments","yearsOfWorkExperience",
-                      "postalCode","highestLevelofEducation","emailAddress","phoneNumber"]
+                      "postalCode","highestLevelOfEducation","emailAddress","phoneNumber"]
 
 columns["application"] = ["Application ID","Ref","Campus","Academic Program","Application Status",
                           "Decision","Admit Date","Deny Date","App Created","App Submitted","App Completed",
@@ -350,7 +350,7 @@ def make_inquiry(f, ref, name_x, noodle_crm_id, program, term, zip2, email1, mp1
     row.append(years_work)
     # "postalCode"
     row.append(zip2)
-    # "highestLevelofEducation"
+    # "highestLevelOfEducation"
     row.append(highest_ed)
     # "emailAddress"
     row.append(email1)
@@ -457,7 +457,7 @@ def make_application(f, ref, program, term):
 
 
 	#{
-		#"highestLevelofEducation": ["high school", "associate's", "bachelor's in progress", "bachelor's", "master's in progress", "master's", "doctorate"]
+		#"highestLevelOfEducation": ["high school", "associate's", "bachelor's in progress", "bachelor's", "master's in progress", "master's", "doctorate"]
 	#},
 	#{
 		#"yearsOfWorkExperience": ["0-1 years", "2-3 years", "3 or more years"]
