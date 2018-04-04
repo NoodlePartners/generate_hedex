@@ -12,11 +12,13 @@ import json
 _birthday_start_date = "1990-10-10"
 _birthday_n_days = 5 * 365
 
-_u_domain = "cgu.edu"
+# _u_domain = "cgu.edu"
+_u_domain = "tulane.edu"
 
-programs = ["MS in Information Systems & Technology (Online)",
-            "MS in Marketing Analytics (Online)",
-            "MS in Evaluation & Applied Research (Online)"]
+# programs = ["MS in Information Systems & Technology (Online)",
+#             "MS in Marketing Analytics (Online)",
+#             "MS in Evaluation & Applied Research (Online)"]
+programs = ["MPS - Information Technology Management (Online)"]
 n_programs = programs.__len__()
 
 terms = ["Summer 2018", "Fall 2018", "Spring 2019"]
