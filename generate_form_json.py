@@ -11,6 +11,17 @@ import datetime
 _birthday_start_date = "1990-10-10"
 _birthday_n_days = 5 * 365
 
+# Set this to True to add " TEST" to the end of person names
+add_test_to_names = True
+
+# -----------------------------------------
+
+if add_test_to_names:
+    _name_extra = " TEST"
+else:
+    _name_extra = ""
+
+
 def generate_form_json(n):
     i = 0
     rows = []
@@ -20,8 +31,8 @@ def generate_form_json(n):
         family_name = name_x["family_name"]
         address_x = Addresses.get_address()
         row = {
-            "first_name": given_name,
-            "last_name": family_name,
+            "first_name": given_name + _name_extra,
+            "last_name": family_name + _name_extra,
             "email": Emails.get_email(given_name, family_name),
             "birthdate": Rand.get_date_in_range(_birthday_start_date, _birthday_n_days),
             "phone": Addresses.get_phone(True),

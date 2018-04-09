@@ -8,8 +8,18 @@ import sys
 import json
 import datetime
 
+# Set this to True to add " TEST" to the end of person names
+add_test_to_names = True
+
+# -----------------------------------------
+
+if add_test_to_names:
+    _name_extra = " TEST"
+else:
+    _name_extra = ""
 
 isoformat = "%Y-%m-%dT%H:%M-04:00"
+
 
 def generate_hedex(n):
     # HEDEX GET response, from Swagger Documents
@@ -90,8 +100,8 @@ def generate_admissions_person():
     name_x = Names.get_name()
     given_name = name_x["given_name"]
     family_name = name_x["family_name"]
-    res["lastName"] = family_name
-    res["firstName"] = given_name
+    res["lastName"] = family_name + _name_extra
+    res["firstName"] = given_name + _name_extra
     res["preferredName"] = name_x["preferred_given_name"]
     res["formerFirstName"] = name_x["birth_given_name"]
     res["formerLastName"] = name_x["birth_family_name"]

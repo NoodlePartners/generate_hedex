@@ -27,6 +27,9 @@ n_terms = terms.__len__()
 # See make_application if you want to change this
 docs = ["Resume/CV","Statement of Purpose","Transcript: %s","Reference: %s %s, %s"]
 
+# Set this to True to add " TEST" to the end of person names
+add_test_to_names = True
+
 # -----------------------------------------
 
 file_types = ["person", "inquiry", "application"]
@@ -52,7 +55,10 @@ columns["application"] = ["Application ID","Ref","Campus","Academic Program","Ap
                           "Deposit Date","Application Updated","Round Key","Entry Term (Application Scoped)","App FullTime/PartTimeIntent",
                           "Application Fee Waiver Code","Interaction Date","Interaction Code"]
 
-
+if add_test_to_names:
+    _name_extra = " TEST"
+else:
+    _name_extra = ""
 
 def get_program(i):
     return programs[i%n_programs]
@@ -113,12 +119,12 @@ def make_person(f, ref, name_x, noodle_crm_id, program, term, zip2, email1, mp1,
     # "Preferred"
     row.append(name_x["preferred_given_name"])
     # "First"
-    first_name = name_x["given_name"] 
+    first_name = name_x["given_name"] + _name_extra
     row.append(first_name)
     # "Middle"
     row.append("")
     # "Last"
-    last_name = name_x["family_name"]
+    last_name = name_x["family_name"] + _name_extra
     row.append(last_name)
     # "Suffix"
     row.append("")
@@ -325,9 +331,9 @@ def make_inquiry(f, ref, name_x, noodle_crm_id, program, term, zip2, email1, mp1
     source_primary_id = get_noodle_source_id(noodle_crm_id+"0123456789abcdef"[Rand.get(16)])
     row.append(source_primary_id)
     # "firstName"
-    row.append(name_x["given_name"])
+    row.append(name_x["given_name"]+_name_extra)
     # "lastName"
-    row.append(name_x["family_name"])
+    row.append(name_x["family_name"]+_name_extra)
     # "Public Comments"
     jblob = {
         "marketingSourceAdditionalId": str(Rand.get(100000)),
