@@ -119,13 +119,13 @@ def make_person(f, ref, name_x, noodle_crm_id, program, term, zip2, email1, mp1,
     # "Preferred"
     row.append(name_x["preferred_given_name"])
     # "First"
-    first_name = name_x["given_name"] + _name_extra
-    row.append(first_name)
+    first_name = name_x["given_name"]
+    row.append(first_name + _name_extra)
     # "Middle"
     row.append("")
     # "Last"
-    last_name = name_x["family_name"] + _name_extra
-    row.append(last_name)
+    last_name = name_x["family_name"]
+    row.append(last_name + _name_extra)
     # "Suffix"
     row.append("")
     # "Alias"
@@ -487,7 +487,7 @@ if n<10:
     n = 10
 
 # Open files, write headers
-suffix = suffix = datetime.datetime.now().strftime("_%Y%m%d_1_%H%M%S.csv")
+suffix = suffix = datetime.datetime.now().strftime("_%Y%m%d_01_%H%M%S.csv")
 file = {}
 for t in file_types:
     file[t] = open("idata_"+t+suffix, "w")
