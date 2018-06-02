@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 from names import Names
 from addresses import Addresses
 from emails import Emails
@@ -5,19 +6,20 @@ from rand import Rand
 import sys
 
 def p(x):
-    sys.stdout.write(x)
+    sys.stdout.buffer.write(x.encode('utf8'))
 
-def p_row(columns, data=None):
+def p_row(cols, data=None):
     vals = []
-    for col in columns:
+    for col in cols:
         if data:
-            x = data[col]
+            val = data[col]
         else:
-            x = col
-        if type(x) in [str, unicode]:
-            val = '"' + x.encode("utf-8") + '"'
-        else:
-            val = str(x)
+            val = col
+        if type(val) != str:
+            val = str(val)
+        if "," in val or '"' in val:
+            val = val.replace('"', '""')
+            val = '"' + val + '"'
         vals.append(val)
     p(",".join(vals)+"\n")
 
