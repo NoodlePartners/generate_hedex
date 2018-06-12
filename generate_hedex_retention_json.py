@@ -21,7 +21,7 @@ university_address_1 = "1834 Wake Forest Road"
 university_city = "Winston-Salem"
 university_state = "SC"
 university_postal_code = "27106"
-university_country = "USA"
+university_country = "US"
 
 # -----------------------------------------
 
@@ -199,8 +199,8 @@ def generate_retention_studentrecords_students():
         personLmsId = x["personLmsId"]
         email = Emails.get_email(name["given_name"], name["family_name"])
         phone = Addresses.get_phone(prefix=True)
-        address = Address.get_address()
-        birth_address = Address.get_address()
+        address = Addresses.get_address()
+        birth_address = Addresses.get_address()
         latino = Rand.get_bool(10)
         address_line_1 = address["building_number"]+" " + address["street_name"]
         if address["apt"]:
@@ -215,11 +215,11 @@ def generate_retention_studentrecords_students():
             "veteranStatus": None,
             "ipedsHispanic/Latino": latino,
             "ethnicity": "Latino" if latino else "Non-latino",
-            "listOfRaces": Rand.pick((("White",50), ("Black",20), ("Asian",10), ("White|Black",7), ("While|Asian",3), ("Black|Asian",2), ("N/A",15), ("Other",3)))
-            "languagesSpoken": Rand.pick((("English",80), ("English|Spanish",15), ("English|Serbian", 5)))
+            "listOfRaces": Rand.pick((("White",50), ("Black",20), ("Asian",10), ("White|Black",7), ("While|Asian",3), ("Black|Asian",2), ("N/A",15), ("Other",3))),
+            "languagesSpoken": Rand.pick((("English",80), ("English|Spanish",15), ("English|Serbian", 5))),
             "primaryLanguage": "English",
             "alienStatus": None,
-            "countryOfCitizenship": "USA",
+            "countryOfCitizenship": "US",
             "countryOfResidence": address["country"],
             "alienRegistrationNumber": None,
             "immigrationStatus": "Citizen",
@@ -230,7 +230,7 @@ def generate_retention_studentrecords_students():
             "PersonAddresses": [
                 {
                 "addressType": "HOME",
-                "addressLine1": address_line_1
+                "addressLine1": address_line_1,
                 "addressLine2": None,
                 "addressLine3": None,
                 "city": address["city"],
@@ -257,16 +257,17 @@ def generate_retention_studentrecords_students():
                 }
             ],
             "StudentItems": {
-                "studentCurrentStatus": "A",
-                "studentTermItems": studentTermItems
+                "studentCurrentStatus": "Enrolled"
             }
         })
         studentTermItems = []
         credits = 0
+        cut_date_str = cut_date.strftime("%Y-%m-%d")
         for term in retention_catalog_terms:
-            if term["startDate"] > cut_date:
+            if term["startDate"] > cut_date_str:
                 break
             credits += Rand.get(10) + 10
+            problem = Rand.get_bool(80)
             studentTermItems.append({
                 "personSisId": personSisId,
                 "personLmsId": personLmsId,
@@ -280,40 +281,41 @@ def generate_retention_studentrecords_students():
                 "totalCredit": credits,
                 "firstGenerationStudent": None,
                 "firstTimeStudent": None,
-                "currAcadStanding": "string",
+                "currAcadStanding": "Enrolled",
                 "totalWithdrawls": 0,
-                "creditsOnTrack": "string",
-                "estCreditsToGraduate": "Unknown Type: float",
-                "currentFaHold": "string",
-                "currentBursarHold": "string",
-                "primaryProgramCode": "string",
-                "primaryProgramLevel": "string",
-                "primaryDegreeCode": "string",
-                "primaryMajor1": "string",
-                "primaryMajor2": "string",
-                "primaryConcentration1": "string",
-                "primaryConcentration2": "string",
-                "primaryMinor1": "string",
-                "primaryMinor2": "string",
-                "secondaryProgramCode": "string",
-                "secondaryProgramLevel": "string",
-                "secondaryDegreeCode": "string",
-                "secondaryMajor1": "string",
-                "secondaryMajor2": "string",
-                "secondaryConcentration1": "string",
-                "secondaryConcentration2": "string",
-                "secondaryMinor1": "string",
-                "secondarysMinor2": "string",
-                "studentStatus": "string"
+                "creditsOnTrack": not problem,
+                "estCreditsToGraduate": 120-credits,
+                "currentFaHold": problem,
+                "currentBursarHold": Rand.get_bool(50) if problem else False,
+                "primaryProgramCode": Words.get(),
+                "primaryProgramLevel": "Graduate",
+                "primaryDegreeCode": "MS",
+                "primaryMajor1": None,
+                "primaryMajor2": None,
+                "primaryConcentration1": None,
+                "primaryConcentration2": None,
+                "primaryMinor1": None,
+                "primaryMinor2": None,
+                "secondaryProgramCode": None,
+                "secondaryProgramLevel": None,
+                "secondaryDegreeCode": None,
+                "secondaryMajor1": None,
+                "secondaryMajor2": None,
+                "secondaryConcentration1": None,
+                "secondaryConcentration2": None,
+                "secondaryMinor1": None,
+                "secondarysMinor2": None,
+                "studentStatus": None
             })
-
         x["StudentItems"]["studentTermItems"] = studentTermItems
+        retention_studentrecords_students.append(x)
+    return _make_batch("students", retention_studentrecords_students)
 
 
 # Generate all files
 files = ((generate_retention_catalog_terms, "Retention_Catalog_Term"),
          (generate_retention_catalog_sections, "Retention_Catalog_Sections"),
-         (generate_retention_facultystaff_staff, "Retention_FacultyStaff_Staff")
+         (generate_retention_facultystaff_staff, "Retention_FacultyStaff_Staff"),
          (generate_retention_studentrecords_students, "Retention_StudentRecords_Students")
         )
 
