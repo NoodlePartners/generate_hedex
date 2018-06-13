@@ -146,44 +146,46 @@ def generate_retention_facultystaff_staff():
         x = _start_person(name)
         u_email = Emails.get_u_email(name["given_name"], name["family_name"], u_domain=university_email_domain)
         u_phone = university_phone_format % Rand.get(9999)
-        x.update({
-            "PersonAddresses": [
-                {
-                "addressType": "OFFICE",
-                "addressLine1": university_address_1,
-                "addressLine2": u_building_format % (Rand.get(600)+100),
-                "addressLine3": None,
-                "city": university_city,
-                "state": university_state,
-                "postalCode": university_postal_code,
-                "county": None,
-                "country": university_country,
-                "preferredResidenceIndicator": False,
-                "preferredMailingAddressIndicator": None,
-                "addressStartDate": None,
-                "addressEndDate": None
+        x.update(
+            {
+                "PersonAddresses": [
+                    {
+                        "addressType": "OFFICE",
+                        "addressLine1": university_address_1,
+                        "addressLine2": u_building_format % (Rand.get(600)+100),
+                        "addressLine3": None,
+                        "city": university_city,
+                        "state": university_state,
+                        "postalCode": university_postal_code,
+                        "county": None,
+                        "country": university_country,
+                        "preferredResidenceIndicator": False,
+                        "preferredMailingAddressIndicator": None,
+                        "addressStartDate": None,
+                        "addressEndDate": None
+                    }
+                ],
+                "PersonPhones": [
+                    {
+                        "phoneNumber": u_phone,
+                        "phoneType": "OFFICE",
+                        "phoneExtension": None
+                    }
+                ],
+                "PersonEmails": [
+                    {
+                        "emailAddress": u_email,
+                        "emailAddressType": "INSTITUTION",
+                        "preferredEmailIndicator": True
+                    }
+                ],
+                "StaffItems": {
+                    "facInd": i <= n_faculty,
+                    "advInd": False,
+                    "staffInd": i > n_staff,
                 }
-            ],
-            "PersonPhones": [
-                {
-                "phoneNumber": u_phone,
-                "phoneType": "OFFICE",
-                "phoneExtension": None
-                }
-            ],
-            "PersonEmails": [
-                {
-                "emailAddress": u_email,
-                "emailAddressType": "INSTITUTION",
-                "preferredEmailIndicator": True
-                }
-            ],
-            "StaffItems": {
-                "facInd": i > n_staff,
-                "advInd": False,
-                "staffInd": i <= n_staff,
             }
-        })
+        )
         retention_facultystaff_staff.append(x)
     return _make_batch("staff", retention_facultystaff_staff)
 
@@ -229,31 +231,31 @@ def generate_retention_studentrecords_students():
             "personSourceCode": None,
             "PersonAddresses": [
                 {
-                "addressType": "HOME",
-                "addressLine1": address_line_1,
-                "addressLine2": None,
-                "addressLine3": None,
-                "city": address["city"],
-                "state": address["state"],
-                "postal_code": address["postal_code"],
-                "county": address["county"],
-                "country": address["country"],
-                "preferredResidenceIndicator": True,
-                "preferredMailingAddressIndicator": True
+                    "addressType": "HOME",
+                    "addressLine1": address_line_1,
+                    "addressLine2": None,
+                    "addressLine3": None,
+                    "city": address["city"],
+                    "state": address["state"],
+                    "postal_code": address["postal_code"],
+                    "county": address["county"],
+                    "country": address["country"],
+                    "preferredResidenceIndicator": True,
+                    "preferredMailingAddressIndicator": True
                 }
             ],
             "PersonPhones": [
                 {
-                "phoneNumber": phone,
-                "phoneType": "Mobile",
-                "phoneExtension": None
+                    "phoneNumber": phone,
+                    "phoneType": "Mobile",
+                    "phoneExtension": None
                 }
             ],
             "PersonEmails": [
                 {
-                "emailAddress": email,
-                "emailAddressType": "PERSONAL",
-                "preferredEmailIndicator": True
+                    "emailAddress": email,
+                    "emailAddressType": "PERSONAL",
+                    "preferredEmailIndicator": True
                 }
             ],
             "StudentItems": {
@@ -264,6 +266,8 @@ def generate_retention_studentrecords_students():
         credits = 0
         cut_date_str = cut_date.strftime("%Y-%m-%d")
         for term in retention_catalog_terms:
+            if not term.get("sessionStartDate"):
+                continue
             if term["startDate"] > cut_date_str:
                 break
             credits += Rand.get(10) + 10
@@ -312,11 +316,179 @@ def generate_retention_studentrecords_students():
     return _make_batch("students", retention_studentrecords_students)
 
 
+def _generate_enrollment(output_array, person_array, n_person, enrollmentType, n_members_avg):
+    for section in retention_catalog_sections:
+        i = 0
+        used = set([])
+        if n_members_avg == 1:
+            n_members = 1
+        else:
+            n_members = n_members_avg + Rand.get(5) - 2
+        while i < n_members:
+            i += 1
+            k = Rand.get(n_person)
+            while k in used:
+                k = Rand.get(n_person)
+            person = person_array[k]
+            x = {
+                "enrollmentType": enrollmentType,
+                "personSisId": person["personSisId"],
+                "personLmsId": person["personLmsId"],
+                "sisSectionId": section["sisSectionId"],
+                "lmsSectionId": section["lmsSectionId"],
+                "termCode": section["termCode"],
+                "sectionRefNum": section["sectionRefNum"],
+                "subjectCode": section["subjectCode"],
+                "sectionCourseNumber": section["sectionCourseNumber"],
+                "sectionNumber": section["sectionNumber"],
+                "nonTermIndicator": section["nonTermIndicator"],
+                "enrollStatus": "A",
+                "enrollStatusDate": section["sectionStartDate"],
+            }
+            output_array.append(x)
+
+
+retention_facultystaff_teaching = []
+def generate_retention_facultystaff_teaching():
+    _generate_enrollment(retention_facultystaff_teaching, retention_facultystaff_staff, n_faculty, "Faculty", 1)
+    for e in retention_facultystaff_teaching:
+        e.update({"enrollType": "Primary"})
+    return _make_batch("teaching", retention_facultystaff_teaching)
+
+
+def _get_grade():
+    return Rand.pick((("A+",5),("A",5),("A-",5),("B+",20),("B",20),("B-",20),("C+",8),("C",4),("C-",3),("F",10)))
+
+
+retention_studentrecords_studentenrollments = []
+def generate_retention_studentrecords_studentenrollments():
+    _generate_enrollment(retention_studentrecords_studentenrollments, retention_studentrecords_students, retention_studentrecords_students.__len__(), "Student", 10)
+    for e in retention_studentrecords_studentenrollments:
+        e.update({
+            "currentGrade": _get_grade(),
+            "enrollType": "Graded",
+            "midTermGrade": "string",
+            "midtermGradeScheme": "A-F",
+            "midTermGradeDate": e["enrollStatusDate"],
+            "finalGrade": _get_grade(),
+            "finalGradeDate": e["enrollStatusDate"],
+            "finalGradeScheme": "A-F",
+            "creditsAttempted": 5,
+            "creditsEarned": 5
+        })
+    return _make_batch("studentEnrollments", retention_studentrecords_studentenrollments)
+
+
+retention_facultystaff_advisingrelationship = []
+def generate_retention_facultystaff_advisingrelationship():
+    n = retention_facultystaff_staff.__len__()
+    cut_date_str = cut_date.strftime("%Y-%m-%d")
+    for term in retention_catalog_terms:
+        if term.get("sessionStartDate"):
+            continue
+        if term["startDate"] > cut_date_str:
+            break
+        for student in retention_studentrecords_students:
+            j = Rand.get(n)
+            advisor = retention_facultystaff_staff[j]
+            retention_facultystaff_advisingrelationship.append({
+                "advrId": advisor["personSisId"],
+                "studentId": student["personSisId"],
+                "advrTermCode": term["termCode"],
+                "advrType": "Faculty" if j<n_faculty else "Staff",
+                "advrStatusInd": "A",
+                "advrTermStart": term["startDate"],
+                "advrTermEnd": term["endDate"]
+            })
+    return _make_batch("advisors", retention_facultystaff_advisingrelationship)
+
+
+def _copy_enrollment(e):
+    return {
+        "personSisId": e["personSisId"],
+        "personLmsId": e["personLmsId"],
+        "sisSectionId": e["sisSectionId"],
+        "lmsSectionId": e["lmsSectionId"],
+        "termCode": e["termCode"],
+        "sectionRefNum": e["sectionRefNum"],
+        "subjectCode": e["subjectCode"],
+        "sectionCourseNumber": e["sectionCourseNumber"],
+        "sectionNumber": e["sectionNumber"]
+    }
+
+
+retention_engagement_assignments = []
+def generate_retention_engagement_assignments():
+    for e in retention_studentrecords_studentenrollments:
+        n = 10
+        i = 0
+        while i < n:
+            i += 1
+            assignGrade = _get_grade()
+            assignScore = Rand.get(11)
+            x = _copy_enrollment(e)
+            x.update({
+                "assignmentLmsId": "LA%09d"%Rand.get(1000000000),
+                "submissionVersionId": 1,
+                "assignType": Rand.pick((("Term Paper",20),("Quiz",40),("Midterm Exam",10),("Final Exam",10),("Forum Post",20))),
+                "assignTitle": " ".join(Words.get_n(Rand.get(3)+1)),
+                "assignDueDate": e["enrollStatusDate"],
+                "assignGrade": assignGrade,
+                "assignGradeScheme": "A-F",
+                "assignScore": assignScore,
+                "assignScoreScheme": "0-10",
+                "assignHiScore": assignScore,
+                "assignLoScore": assignScore,
+                "assignFirstAttmpt": assignScore,
+                "assignLastAttmpt": assignScore,
+                "assignAvgAttmpt": assignScore,
+                "assignNumAttempt": 1
+            })
+            retention_engagement_assignments.append(x)
+    return _make_batch("assignments", retention_engagement_assignments)
+
+
+retention_engagement_engagementactivity = []
+def generate_retention_engagement_engagementactivity():
+    for e in retention_studentrecords_studentenrollments:
+        engagementStatus = Rand.pick((("None", 10),("Low",20),("Medium",50),("High",20)))
+        if engagementStatus == "None":
+            lmsLastAccessDate = None
+            lmsTotalTime = 0
+            lmsTotalLogin = 0
+        elif engagementStatus == "Low":
+            lmsLastAccessDate = e["enrollStatusDate"]
+            lmsTotalTime = "00-00-%d" % (Rand.get(39)+20)
+            lmsTotalLogin = Rand.get(10) + 10
+        elif engagementStatus == "Medium":
+            lmsLastAccessDate = e["enrollStatusDate"]
+            lmsTotalTime = "00-%d-20" % (Rand.get(5)+7)
+            lmsTotalLogin = Rand.get(10) + 30
+        else:
+            lmsLastAccessDate = e["enrollStatusDate"]
+            lmsTotalTime = "02-%d-20" % (Rand.get(49)+10)
+            lmsTotalLogin = Rand.get(10) + 50
+        x = _copy_enrollment(e)
+        x.update({
+            "engagementStatus": engagementStatus,
+            "lmsLastAccessDate": lmsLastAccessDate,
+            "lmsTotalTime": lmsTotalTime,
+            "lmsTotalLogin": lmsTotalLogin
+        })
+        retention_engagement_engagementactivity.append(x)
+    return _make_batch("engagementActivity", retention_engagement_engagementactivity)
+
+
 # Generate all files
 files = ((generate_retention_catalog_terms, "Retention_Catalog_Term"),
          (generate_retention_catalog_sections, "Retention_Catalog_Sections"),
          (generate_retention_facultystaff_staff, "Retention_FacultyStaff_Staff"),
-         (generate_retention_studentrecords_students, "Retention_StudentRecords_Students")
+         (generate_retention_studentrecords_students, "Retention_StudentRecords_Students"),
+         (generate_retention_facultystaff_teaching, "Retention_FacultyStaff_Teaching"),
+         (generate_retention_studentrecords_studentenrollments, "Retention_StudentRecords_StudentEnrollments"),
+         (generate_retention_facultystaff_advisingrelationship, "Retention_FacultyStaff_AdvisingRelationship"),
+         (generate_retention_engagement_assignments, "Retention_Engagement_Assignments"),
+         (generate_retention_engagement_engagementactivity, "Retention_Engagement_EngagementActivity")
         )
 
 def generate_all_files():
