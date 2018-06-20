@@ -479,6 +479,31 @@ def generate_retention_engagement_engagementactivity():
     return _make_batch("engagementActivity", retention_engagement_engagementactivity)
 
 
+retention_engagement_attendance = []
+def generate_retention_engagement_attendance():
+    for e in retention_studentrecords_studentenrollments:
+        totalAttendanceEvents = 8 + Rand.get(4)
+        attendanceStatus = Rand.pick((("Red", 10),("Yellow",30),("Green",60)))
+        if attendanceStatus == "Red":
+            totalTardyEvents = Rand.get(3)
+            totalAbsentEvents = totalAttendanceEvents - totalTardyEvents - Rand.get(4)
+        elif attendanceStatus == "Yellow":
+            totalAbsentEvents = totalAttendanceEvents - 4 - Rand.get(3)
+            totalTardyEvents = Rand.get(2)
+        else:
+            totalAbsentEvents = Rand.get(3)
+            totalTardyEvents = Rand.get(2)
+        x = _copy_enrollment(e)
+        x.update({
+            "attendanceStatus": attendanceStatus,
+            "totalAttendanceEvents": totalAttendanceEvents,
+            "totalAbsentEvents": totalAbsentEvents,
+            "totalTardyEvents": totalTardyEvents
+        })
+        retention_engagement_attendance.append(x)
+    return _make_batch("attendance", retention_engagement_attendance)
+
+
 # Generate all files
 files = ((generate_retention_catalog_terms, "Retention_Catalog_Term"),
          (generate_retention_catalog_sections, "Retention_Catalog_Sections"),
@@ -488,7 +513,8 @@ files = ((generate_retention_catalog_terms, "Retention_Catalog_Term"),
          (generate_retention_studentrecords_studentenrollments, "Retention_StudentRecords_StudentEnrollments"),
          (generate_retention_facultystaff_advisingrelationship, "Retention_FacultyStaff_AdvisingRelationship"),
          (generate_retention_engagement_assignments, "Retention_Engagement_Assignments"),
-         (generate_retention_engagement_engagementactivity, "Retention_Engagement_EngagementActivity")
+         (generate_retention_engagement_engagementactivity, "Retention_Engagement_EngagementActivity"),
+         (generate_retention_engagement_attendance, "Retention_Engagement_Attendance")
         )
 
 def generate_all_files():
