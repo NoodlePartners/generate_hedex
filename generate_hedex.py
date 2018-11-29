@@ -806,7 +806,7 @@ def generate_person_application(term):
     return res
 
 
-def generate_person_applications():
+def generate_applicant_applications():
     # Most prospects don't actually apply
     if hold_terms.__len__() < 2:
         n = Rand.pick(((0,65),(1,35)))
@@ -828,9 +828,9 @@ def generate_person_applicant():
     hold_admitted = False
     hold_admitted_date = ""
     hold_admitted_date_dt = None
-    person_applications = generate_person_applications()
+    applicant_applications = generate_applicant_applications()
     
-    if person_applications.__len__() == 0:
+    if applicant_applications.__len__() == 0:
         return None
 
     if hold_admitted:
@@ -862,7 +862,7 @@ def generate_person_applicant():
         # "applicantMisc3": "string",
         # "applicantMisc4": "string",
         # "restrictions": "string",
-        "PersonApplications": person_applications
+        "ApplicantApplications": applicant_applications
     }
     
     return res
