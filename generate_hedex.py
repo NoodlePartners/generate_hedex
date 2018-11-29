@@ -54,6 +54,7 @@ def generate_admissions_person():
         "itemSequenceNumber": 0,
         "personSisId": "",
         "personCRMId": "",
+        "noodleCrmId": "",
         "lastName": "",
         "firstName": "",
         "middleName": "",
@@ -96,6 +97,7 @@ def generate_admissions_person():
         
     res["personSisId"] = "%d"%(Rand.get(999999)+1000000)
     res["personCRMId"] = "%d"%(Rand.get(999999)+1000000)
+    res["noodleCrmId"] = "".join([("%04x"  % Rand.get(65536)) for i in range(0,10)])
 
     name_x = Names.get_name()
     given_name = name_x["given_name"]
