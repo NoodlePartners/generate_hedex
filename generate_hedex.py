@@ -49,7 +49,7 @@ _birthday_start_date = "1990-10-10"
 _birthday_n_days = 5 * 365
 
 def generate_admissions_person():
-    
+
     res = {
         "itemSequenceNumber": 0,
         "personSisId": "",
@@ -94,7 +94,7 @@ def generate_admissions_person():
         "PersonProspect": {},
 #        "PersonApplicant": {} Might not be added if the person isn't an applicant
     }
-        
+
     res["personSisId"] = "%d"%(Rand.get(999999)+1000000)
     res["personCRMId"] = "%d"%(Rand.get(999999)+1000000)
     res["noodleCrmId"] = "".join([("%04x"  % Rand.get(65536)) for i in range(0,10)])
@@ -122,7 +122,7 @@ def generate_admissions_person():
     if Rand.get_bool(8): # is from Mexico
         res["ipedsHispanicLatino"] = True
         plang = "Spanish"
-        lspok = "Spanish|" + lspok 
+        lspok = "Spanish|" + lspok
         ccit = "MX"
         if Rand.get_bool(25):
             astat = None
@@ -164,7 +164,7 @@ def generate_admissions_person():
         res["PersonApplicant"] = person_applicant
         res["PersonTestScores"] = generate_person_test_scores()
         res["PersonEducation"] = generate_person_educations()
-    
+
     return res
 
 
@@ -341,7 +341,7 @@ def generate_person_education():
             }
         ]
     }
-        
+
     return {} #TODO
 
 
@@ -490,7 +490,7 @@ def generate_prospect_activity(program, term, vendor, coachId, channel, initiato
     }
     res["activityIDs"] = generate_activity_ids()
     return res
-        
+
 
 def generate_prospect_activities():
     res = []
@@ -549,7 +549,7 @@ def generate_prospect_rating(term):
         # "ratingStartDate": "",
         "ratingType": "demographic score",
         "ratingScore": Rand.get(4)
-    }        
+    }
     return {}
 
 
@@ -568,7 +568,7 @@ def generate_person_prospect():
     dt = []
     last = Dates.get_date_in_range("2017-10-01", 45, False)
     dt.append(last)
-    for j in (1,4,6):        
+    for j in (1,4,6):
         last += datetime.timedelta(Rand.get(j)+1)
         dt.append(last)
     res = {
@@ -577,6 +577,7 @@ def generate_person_prospect():
         "prospectComments": "hello, world!",
         "prospectAdmissionsCounselor": "L"+("%06d"%Rand.get(1000000)),
         "prospectExtracurricularInterests": Rand.pick((("Kayaking",20),("Skiing",20),("Swimming",20),("Fencing",20),("Baseball",20))),
+        "lastApplicationActivityDateTime": dt[3].strftime(isoformat),
         # "prospectContinuedInterestIndicators": "string",
         "athleticProspectIndicator": Rand.get_bool(20),
         "prospectStatus": "active",
@@ -623,7 +624,7 @@ def generate_application_check_list_item():
                                                     ("Jane Poe",25),
                                                     ("Joe Blow",25),
                                                     ("Jill Crow",25))),50),
-                                        ("Transcript from " + 
+                                        ("Transcript from " +
                                          Rand.pick((("Malcolm S White University",25),
                                                     ("Springfield University",25),
                                                     ("State University of Euphoria",25),
@@ -657,7 +658,7 @@ def generate_application_financial_aid():
         "fafsaFiled": True
     }
     return res
-        
+
 
 def generate_application_financial_aids(f):
     res = []
@@ -829,7 +830,7 @@ def generate_person_applicant():
     hold_admitted_date = ""
     hold_admitted_date_dt = None
     applicant_applications = generate_applicant_applications()
-    
+
     if applicant_applications.__len__() == 0:
         return None
 
@@ -864,7 +865,7 @@ def generate_person_applicant():
         # "restrictions": "string",
         "ApplicantApplications": applicant_applications
     }
-    
+
     return res
 
 
@@ -875,4 +876,3 @@ if sys.argv.__len__()<2:
 else:
     sys.stdout.write(json.dumps(generate_hedex(int(sys.argv[1])),indent=None))
     sys.stdout.write("\n")
-
